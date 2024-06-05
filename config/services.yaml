@@ -1,0 +1,38 @@
+parameters:
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  DriveManager\Infrastructure\Api\V1\DropFileController:  
+    autowire: true
+    arguments:
+      $repository: '@drivemanager.repository'
+      $dropFileInterface: '@drivemanager.DropFileInterface'
+      
+  drivemanager.repository:
+    public: true
+    autowire: true
+    class: DriveManager\Infrastructure\Persistence\FileRepositoryInMemory
+    
+  # drivemanager.DropFileInterface:
+  #   public: true
+  #   autowire: true
+  #   class: DriveManager\Infrastructure\DriveProvider\DropFileNextcloud
+  #   arguments:
+  #     $baseUri: 'https://nuage.logipro.com/owncloud/remote.php/dav/'
+  #     $mailAddress: 'romain.malosse@logipro.com'
+  #     $password: 'AlFi5GoZI^'
+      # $fileId: 'unIdDeTest'
+
+
+  # Correction ici: aliaser l'interface vers l'implémentation
+  DriveManager\Application\Service\DropFile\DropFileInterface: "@drivemanager.DropFileInterface"
+  
+  DriveManager\Domain\Model\File\FileRepositoryInterface: "@drivemanager.repository"
+
+  DriveManager\Infrastructure\Api\V1\:
+    resource: "../src/Infrastructure/Api/V1/"
+    tags: ["controller.service_arguments"]

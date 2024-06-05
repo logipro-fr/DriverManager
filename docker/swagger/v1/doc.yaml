@@ -1,0 +1,78 @@
+openapi: 3.1.0
+info:
+  title: DriveManager API
+  version: 1.0.0
+servers:
+  - url: http://172.17.0.1:11102/api/v1
+    description: Local server
+paths:
+  /dropFile/dropFile:
+    post:
+      summary: Deposit a file into the directory
+      operationId: dropFile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileId:
+                  type: string
+                  description: Unique identifier for the file
+                  example: UnIdDeTest
+                fileToDeposit:
+                  type: string
+                  description: Name of the file to be deposited
+                  example: testfile.txt
+                filePathToDirectory:
+                  type: string
+                  description: Path to the directory where the file will be deposited
+                  example: /Rapports
+                fileDate:
+                  type: string
+                  description: Date of the file
+                  example: 2024-06-05T10:30:00Z
+                fileContent:
+                  type: string
+                  description: Content of the file
+                  example: This is a test file content
+                driver:
+                  type: string
+                  description: Name of the driver to handle the file deposit
+                  example: FileSysteme
+      responses:
+        '200':
+          description: File successfully deposited
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates whether the file deposit was successful
+                    example: true
+                  message:
+                    type: string
+                    description: Message associated with the response
+                    example: File deposited successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates whether the file deposit was successful
+                    example: false
+                  errorCode:
+                    type: string
+                    description: Name of the exception class if any error occurs
+                    example: InvalidRequestException
+                  message:
+                    type: string
+                    description: Message associated with the response
+                    example: Invalid request
