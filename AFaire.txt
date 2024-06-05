@@ -1,0 +1,23 @@
+curl -u "romain.malosse@logipro.com:AlFi5GoZI^" -X GET "https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test/hello.txt"
+
+curl -u "romain.malosse@logipro.com:AlFi5GoZI^" -X PUT --data-binary "/home/dev/work/DriveManager/tests/unit/resources/myHello.txt" "https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test/myHello.txt"
+
+curl -I -u "romain.malosse@logipro.com:AlFi5GoZI^" 'https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test/hello.txt'
+
+
+
+
+Momo2
+Faire systeme de confirmation de dépôt de fichier sur le drive
+
+voir pour fair le model et la hierarchie de fichier comme dit sur discord par fredo
+ajouter les objet de valeur path et fullPathName ou quelque chose du genre puis modifier le code
+voir pour la gestion des fichier corompu
+
+éviter la dépendance avec le système du fichier pour l url nextcloud et revenir en arriere
+Créer le loger pour tester le header et apprendre à connaître le http client de symfony et des functions puis créer un loggret et l associer au set loger et voir avec ça ce que je peux faire
+test integration apres avoir fait le clientFactory
+Voir pour mettre a jour le kanboard
+    
+
+probleme co api surement du a adresse mail : mdp mal formés
