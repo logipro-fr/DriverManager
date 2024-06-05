@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function start_docker_compose() {
+    (cd docker && docker compose up -d)
+}
+
+start_docker_compose

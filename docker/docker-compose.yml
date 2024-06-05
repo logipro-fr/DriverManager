@@ -1,0 +1,44 @@
+services:
+  nginx-devlocal:
+    container_name: "drivemanager-nginx"
+    build:
+      context: ../.
+      dockerfile: docker/nginx/Dockerfile
+    command: [nginx, '-g', 'daemon off;']
+    depends_on:
+      - php-devlocal
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - "$PWD/..:/var/drivemanager"
+    ports:
+      - "33080:80"
+      - "2443:443"
+    networks:
+      - drivemanager-networks
+
+  php-devlocal:
+    container_name: "drivemanager-php"
+    build:
+      context: ../.
+      dockerfile: docker/php/Dockerfile
+      tags:
+        - php-drivemanager
+    user: 1000:1000
+    volumes:
+      - "$PWD/..:/var/drivemanager"
+      - "$PWD/..:$PWD/.."
+    working_dir: $PWD/..
+    networks:
+      - drivemanager-networks
+
+networks:
+  drivemanager-networks:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: fdff:1:1::/112
+          gateway: fdff:1:1::1
+
+volumes:
+  drivemanager-db:

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function stop_docker_compose() {
+    (cd docker && docker compose down)
+}
+
+stop_docker_compose
