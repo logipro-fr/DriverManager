@@ -3,8 +3,8 @@ info:
   title: DriveManager API
   version: 1.0.0
 servers:
-  - url: http://172.17.0.1:11102/api/v1
-    description: Local server
+  - url: http://172.17.0.1:11180/api/v1
+    description: test
 paths:
   /dropFile/dropFile:
     post:
@@ -40,7 +40,7 @@ paths:
                 driver:
                   type: string
                   description: Name of the driver to handle the file deposit
-                  example: FileSysteme
+                  example: NextCloud
       responses:
         '200':
           description: File successfully deposited
@@ -53,10 +53,36 @@ paths:
                     type: boolean
                     description: Indicates whether the file deposit was successful
                     example: true
+                  errorCode:
+                    type: string
+                    description: Name of the exception class if any error occurs
+                    example: null
                   message:
                     type: string
                     description: Message associated with the response
                     example: File deposited successfully
+                  data:
+                    type: object
+                    description: Data related to the deposited file
+                    properties:
+                      fileId:
+                        type: string
+                        example: UnIdDeTest
+                      fileToDeposit:
+                        type: string
+                        example: testfile.txt
+                      filePathToDirectory:
+                        type: string
+                        example: /Rapports
+                      fileDate:
+                        type: string
+                        example: 2024-06-06 07:41:39.417432
+                      fileContent:
+                        type: string
+                        example: This is a test file content
+                      driver:
+                        type: string
+                        example: FileSysteme
         '400':
           description: Bad request
           content:
@@ -76,3 +102,36 @@ paths:
                     type: string
                     description: Message associated with the response
                     example: Invalid request
+                  data:
+                    type: object
+                    description: Data related to the error
+                    properties:
+                      fileId:
+                        type: string
+                        example: UnIdDeTest
+                      fileToDeposit:
+                        type: string
+                        example: testfile.txt
+                      filePathToDirectory:
+                        type: string
+                        example: ""
+                      fileDate:
+                        type: string
+                        example: ""
+                      fileContent:
+                        type: string
+                        example: ""
+                      driver:
+                        type: string
+                        example: badApiName
+                    example:
+                      success: false
+                      errorCode: BadApiNameException
+                      message: A wrong api name is enter in parameter of function create
+                      data:
+                        fileId: UnIdDeTest
+                        fileToDeposit: testfile.txt
+                        filePathToDirectory: ""
+                        fileDate: ""
+                        fileContent: ""
+                        driver: badApiName

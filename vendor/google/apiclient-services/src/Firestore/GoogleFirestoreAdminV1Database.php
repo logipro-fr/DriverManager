@@ -40,6 +40,10 @@ class GoogleFirestoreAdminV1Database extends \Google\Model
   /**
    * @var string
    */
+  public $deleteTime;
+  /**
+   * @var string
+   */
   public $earliestVersionTime;
   /**
    * @var string
@@ -61,6 +65,10 @@ class GoogleFirestoreAdminV1Database extends \Google\Model
    * @var string
    */
   public $pointInTimeRecoveryEnablement;
+  /**
+   * @var string
+   */
+  public $previousId;
   /**
    * @var string
    */
@@ -151,6 +159,20 @@ class GoogleFirestoreAdminV1Database extends \Google\Model
   /**
    * @param string
    */
+  public function setDeleteTime($deleteTime)
+  {
+    $this->deleteTime = $deleteTime;
+  }
+  /**
+   * @return string
+   */
+  public function getDeleteTime()
+  {
+    return $this->deleteTime;
+  }
+  /**
+   * @param string
+   */
   public function setEarliestVersionTime($earliestVersionTime)
   {
     $this->earliestVersionTime = $earliestVersionTime;
@@ -231,6 +253,20 @@ class GoogleFirestoreAdminV1Database extends \Google\Model
   public function getPointInTimeRecoveryEnablement()
   {
     return $this->pointInTimeRecoveryEnablement;
+  }
+  /**
+   * @param string
+   */
+  public function setPreviousId($previousId)
+  {
+    $this->previousId = $previousId;
+  }
+  /**
+   * @return string
+   */
+  public function getPreviousId()
+  {
+    return $this->previousId;
   }
   /**
    * @param string

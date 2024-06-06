@@ -4,12 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
+class ComposerStaticInitaba4967acbdf9fd79236606616699348
 {
     public static $files = array (
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
@@ -122,6 +122,7 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         'p' => 
         array (
             'phpseclib3\\' => 11,
+            'phpDocumentor\\Reflection\\' => 25,
         ),
         'W' => 
         array (
@@ -144,12 +145,15 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\VarExporter\\' => 30,
             'Symfony\\Component\\VarDumper\\' => 28,
+            'Symfony\\Component\\TypeInfo\\' => 27,
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\String\\' => 25,
             'Symfony\\Component\\Stopwatch\\' => 28,
             'Symfony\\Component\\Runtime\\' => 26,
             'Symfony\\Component\\Routing\\' => 26,
+            'Symfony\\Component\\PropertyInfo\\' => 31,
             'Symfony\\Component\\Process\\' => 26,
+            'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Symfony\\Component\\HttpClient\\' => 29,
@@ -157,6 +161,7 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
             'Symfony\\Component\\Filesystem\\' => 29,
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\ErrorHandler\\' => 31,
+            'Symfony\\Component\\Dotenv\\' => 25,
             'Symfony\\Component\\DomCrawler\\' => 29,
             'Symfony\\Component\\DependencyInjection\\' => 38,
             'Symfony\\Component\\Console\\' => 26,
@@ -181,7 +186,13 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         ),
         'O' => 
         array (
+            'OpenApi\\' => 8,
             'OndraM\\CiDetector\\' => 18,
+        ),
+        'N' => 
+        array (
+            'Nelmio\\CorsBundle\\' => 18,
+            'Nelmio\\ApiDocBundle\\' => 20,
         ),
         'M' => 
         array (
@@ -258,6 +269,12 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
+        'phpDocumentor\\Reflection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+        ),
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
@@ -322,6 +339,10 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         array (
             0 => __DIR__ . '/..' . '/symfony/var-dumper',
         ),
+        'Symfony\\Component\\TypeInfo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/type-info',
+        ),
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
@@ -342,9 +363,17 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
         ),
+        'Symfony\\Component\\PropertyInfo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/property-info',
+        ),
         'Symfony\\Component\\Process\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
+        ),
+        'Symfony\\Component\\OptionsResolver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/options-resolver',
         ),
         'Symfony\\Component\\HttpKernel\\' => 
         array (
@@ -373,6 +402,10 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         'Symfony\\Component\\ErrorHandler\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/error-handler',
+        ),
+        'Symfony\\Component\\Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/dotenv',
         ),
         'Symfony\\Component\\DomCrawler\\' => 
         array (
@@ -447,9 +480,21 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
         ),
+        'OpenApi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zircote/swagger-php/src',
+        ),
         'OndraM\\CiDetector\\' => 
         array (
             0 => __DIR__ . '/..' . '/ondram/ci-detector/src',
+        ),
+        'Nelmio\\CorsBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nelmio/cors-bundle',
+        ),
+        'Nelmio\\ApiDocBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nelmio/api-doc-bundle/src',
         ),
         'Monolog\\' => 
         array (
@@ -1942,10 +1987,10 @@ class ComposerStaticInit70024bd027eed31023f17a2f766f69ff
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit70024bd027eed31023f17a2f766f69ff::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit70024bd027eed31023f17a2f766f69ff::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit70024bd027eed31023f17a2f766f69ff::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit70024bd027eed31023f17a2f766f69ff::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitaba4967acbdf9fd79236606616699348::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitaba4967acbdf9fd79236606616699348::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitaba4967acbdf9fd79236606616699348::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitaba4967acbdf9fd79236606616699348::$classMap;
 
         }, null, ClassLoader::class);
     }

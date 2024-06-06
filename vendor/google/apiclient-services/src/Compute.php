@@ -153,6 +153,7 @@ class Compute extends \Google\Service
   public $vpnTunnels;
   public $zoneOperations;
   public $zones;
+  public $rootUrlTemplate;
 
   /**
    * Constructs the internal representation of the Compute service.
@@ -165,6 +166,7 @@ class Compute extends \Google\Service
   {
     parent::__construct($clientOrConfig);
     $this->rootUrl = $rootUrl ?: 'https://compute.googleapis.com/';
+    $this->rootUrlTemplate = $rootUrl ?: 'https://compute.UNIVERSE_DOMAIN/';
     $this->servicePath = 'compute/v1/';
     $this->batchPath = 'batch/compute/v1';
     $this->version = 'v1';
@@ -8953,6 +8955,30 @@ class Compute extends \Google\Service
             ],'patch' => [
               'path' => 'projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}',
               'httpMethod' => 'PATCH',
+              'parameters' => [
+                'project' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'zone' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'nodeGroup' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+              ],
+            ],'performMaintenance' => [
+              'path' => 'projects/{project}/zones/{zone}/nodeGroups/{nodeGroup}/performMaintenance',
+              'httpMethod' => 'POST',
               'parameters' => [
                 'project' => [
                   'location' => 'path',

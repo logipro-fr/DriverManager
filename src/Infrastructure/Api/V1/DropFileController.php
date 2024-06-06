@@ -29,7 +29,7 @@ class DropFileController
         $this->apiKey = file_get_contents(getcwd() . sprintf(self::PATH_RESOURCES, 'NextCloudApiKey.txt'));
     }
 
-    #[Route('api/v1/dropFile/dropFile', 'DropFile', methods: ['POST'])]
+    #[Route('/api/v1/dropFile/dropFile', 'DropFile', methods: ['POST'])]
     public function dropFile(Request $request): Response
     {
         $dropFileRequest = $this->buildDropFileRequest($request);

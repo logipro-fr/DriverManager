@@ -37,9 +37,6 @@ use Google\Client;
  */
 class DataPortability extends \Google\Service
 {
-  /** Move a copy of the Google Alerts subscriptions you created.. */
-  const DATAPORTABILITY_ALERTS_SUBSCRIPTIONS =
-      "https://www.googleapis.com/auth/dataportability.alerts.subscriptions";
   /** Move a copy of messages between you and the businesses you have conversations with across Google services.. */
   const DATAPORTABILITY_BUSINESSMESSAGING_CONVERSATIONS =
       "https://www.googleapis.com/auth/dataportability.businessmessaging.conversations";
@@ -233,6 +230,7 @@ class DataPortability extends \Google\Service
   public $archiveJobs;
   public $authorization;
   public $portabilityArchive;
+  public $rootUrlTemplate;
 
   /**
    * Constructs the internal representation of the DataPortability service.
@@ -245,6 +243,7 @@ class DataPortability extends \Google\Service
   {
     parent::__construct($clientOrConfig);
     $this->rootUrl = $rootUrl ?: 'https://dataportability.googleapis.com/';
+    $this->rootUrlTemplate = $rootUrl ?: 'https://dataportability.UNIVERSE_DOMAIN/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';

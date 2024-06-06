@@ -494,7 +494,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         if (isset($this->definitions[$id])) {
             unset($this->definitions[$id]);
-            $this->removedIds[$id] = true;
+            if ('.' !== ($id[0] ?? '-')) {
+                $this->removedIds[$id] = true;
+            }
         }
     }
 
@@ -768,6 +770,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         parent::compile();
 
         foreach ($this->definitions + $this->aliasDefinitions as $id => $definition) {
+            if ('.' === ($id[0] ?? '-')) {
+                continue;
+            }
             if (!$definition->isPublic() || $definition->isPrivate()) {
                 $this->removedIds[$id] = true;
             }
@@ -841,7 +846,9 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         if (isset($this->aliasDefinitions[$alias])) {
             unset($this->aliasDefinitions[$alias]);
-            $this->removedIds[$alias] = true;
+            if ('.' !== ($alias[0] ?? '-')) {
+                $this->removedIds[$alias] = true;
+            }
         }
     }
 
@@ -873,7 +880,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     /**
      * Registers a service definition.
      *
-     * This methods allows for simple registration of service definition
+     * This method allows for simple registration of service definition
      * with a fluid interface.
      */
     public function register(string $id, ?string $class = null): Definition
@@ -1592,7 +1599,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      */
     public static function hash(mixed $value): string
     {
-        $hash = substr(base64_encode(hash('sha256', serialize($value), true)), 0, 7);
+        $hash = substr(base64_encode(hash('xxh128', serialize($value), true)), 0, 7);
 
         return str_replace(['/', '+'], ['.', '_'], $hash);
     }

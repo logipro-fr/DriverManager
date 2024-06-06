@@ -63,6 +63,7 @@ class Spanner extends \Google\Service
   public $projects_instances_instancePartitions_operations;
   public $projects_instances_operations;
   public $scans;
+  public $rootUrlTemplate;
 
   /**
    * Constructs the internal representation of the Spanner service.
@@ -75,6 +76,7 @@ class Spanner extends \Google\Service
   {
     parent::__construct($clientOrConfig);
     $this->rootUrl = $rootUrl ?: 'https://spanner.googleapis.com/';
+    $this->rootUrlTemplate = $rootUrl ?: 'https://spanner.UNIVERSE_DOMAIN/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -501,6 +503,11 @@ class Spanner extends \Google\Service
                   'location' => 'query',
                   'type' => 'string',
                 ],
+                'encryptionConfig.kmsKeyNames' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                  'repeated' => true,
+                ],
               ],
             ],'delete' => [
               'path' => 'v1/{+name}',
@@ -692,7 +699,17 @@ class Spanner extends \Google\Service
         'databases',
         [
           'methods' => [
-            'create' => [
+            'changequorum' => [
+              'path' => 'v1/{+name}:changequorum',
+              'httpMethod' => 'POST',
+              'parameters' => [
+                'name' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+              ],
+            ],'create' => [
               'path' => 'v1/{+parent}/databases',
               'httpMethod' => 'POST',
               'parameters' => [

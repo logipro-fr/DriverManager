@@ -8,11 +8,14 @@ function create_var_directory() {
     fi
 }
 
-function build_php_image() {
-    docker build -t drivemanager-php:latest docker/php
+function build_docker_images() {
+    (
+        cd docker 
+        docker compose build
+    )
 }
 
 
 create_var_directory
-build_php_image
+build_docker_images
 bin/composer install

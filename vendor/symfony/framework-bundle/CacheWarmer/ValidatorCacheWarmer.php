@@ -24,18 +24,19 @@ use Symfony\Component\Validator\ValidatorBuilder;
  * Warms up XML and YAML validator metadata.
  *
  * @author Titouan Galopin <galopintitouan@gmail.com>
+ *
+ * @final since Symfony 7.1
  */
 class ValidatorCacheWarmer extends AbstractPhpFileCacheWarmer
 {
-    private ValidatorBuilder $validatorBuilder;
-
     /**
      * @param string $phpArrayFile The PHP file where metadata are cached
      */
-    public function __construct(ValidatorBuilder $validatorBuilder, string $phpArrayFile)
-    {
+    public function __construct(
+        private ValidatorBuilder $validatorBuilder,
+        string $phpArrayFile,
+    ) {
         parent::__construct($phpArrayFile);
-        $this->validatorBuilder = $validatorBuilder;
     }
 
     protected function doWarmUp(string $cacheDir, ArrayAdapter $arrayAdapter, ?string $buildDir = null): bool

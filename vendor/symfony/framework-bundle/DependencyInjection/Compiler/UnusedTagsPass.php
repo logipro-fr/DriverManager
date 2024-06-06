@@ -82,6 +82,7 @@ class UnusedTagsPass implements CompilerPassInterface
         'routing.route_loader',
         'scheduler.schedule_provider',
         'scheduler.task',
+        'security.access_token_handler.oidc.signature_algorithm',
         'security.authenticator.login_linker',
         'security.expression_language_provider',
         'security.remember_me_handler',
@@ -110,7 +111,7 @@ class UnusedTagsPass implements CompilerPassInterface
 
         foreach ($container->findUnusedTags() as $tag) {
             // skip known tags
-            if (\in_array($tag, self::KNOWN_TAGS)) {
+            if (\in_array($tag, self::KNOWN_TAGS, true)) {
                 continue;
             }
 

@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\UndefinedExtensionHandler;
 use Symfony\Component\ExpressionLanguage\Expression;
 
 /**
@@ -48,11 +49,17 @@ class ContainerConfigurator extends AbstractConfigurator
         $this->env = $env;
     }
 
-    final public function extension(string $namespace, array $config): void
+    final public function extension(string $namespace, array $config, bool $prepend = false): void
     {
+        if ($prepend) {
+            $this->container->prependExtensionConfig($namespace, static::processValue($config));
+
+            return;
+        }
+
         if (!$this->container->hasExtension($namespace)) {
             $extensions = array_filter(array_map(fn (ExtensionInterface $ext) => $ext->getAlias(), $this->container->getExtensions()));
-            throw new InvalidArgumentException(sprintf('There is no extension able to load the configuration for "%s" (in "%s"). Looked for namespace "%s", found "%s".', $namespace, $this->file, $namespace, $extensions ? implode('", "', $extensions) : 'none'));
+            throw new InvalidArgumentException(UndefinedExtensionHandler::getErrorMessage($namespace, $this->file, $namespace, $extensions));
         }
 
         $this->container->loadFromExtension($namespace, static::processValue($config));

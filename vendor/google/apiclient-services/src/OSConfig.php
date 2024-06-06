@@ -48,6 +48,7 @@ class OSConfig extends \Google\Service
   public $projects_patchDeployments;
   public $projects_patchJobs;
   public $projects_patchJobs_instanceDetails;
+  public $rootUrlTemplate;
 
   /**
    * Constructs the internal representation of the OSConfig service.
@@ -60,6 +61,7 @@ class OSConfig extends \Google\Service
   {
     parent::__construct($clientOrConfig);
     $this->rootUrl = $rootUrl ?: 'https://osconfig.googleapis.com/';
+    $this->rootUrlTemplate = $rootUrl ?: 'https://osconfig.UNIVERSE_DOMAIN/';
     $this->servicePath = '';
     $this->batchPath = 'batch';
     $this->version = 'v1';
@@ -252,6 +254,10 @@ class OSConfig extends \Google\Service
                   'location' => 'query',
                   'type' => 'string',
                 ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
               ],
             ],'delete' => [
               'path' => 'v1/{+name}',
@@ -261,6 +267,10 @@ class OSConfig extends \Google\Service
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
                 ],
               ],
             ],'get' => [
@@ -317,6 +327,14 @@ class OSConfig extends \Google\Service
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
+                ],
+                'allowMissing' => [
+                  'location' => 'query',
+                  'type' => 'boolean',
+                ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
                 ],
                 'updateMask' => [
                   'location' => 'query',

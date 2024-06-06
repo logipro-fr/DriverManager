@@ -84,7 +84,6 @@ class DropFileForFileSystemTest extends TestCase
     {
         $dropFile = new DropFileForFileSystem($this->root->url());
         $newDirectory = 'testDirectoryPermission';
-
         $dropFile->createDirectory($newDirectory);
         $permissions = fileperms(vfsStream::url('root/' . $newDirectory)) & 0777;
 

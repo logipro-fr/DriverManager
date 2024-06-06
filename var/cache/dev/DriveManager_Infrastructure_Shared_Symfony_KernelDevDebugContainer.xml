@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
   <parameters>
-    <parameter key="kernel.project_dir">/home/dev/work/DriveManager</parameter>
+    <parameter key="kernel.project_dir">/var/drivemanager</parameter>
     <parameter key="kernel.environment">dev</parameter>
     <parameter key="kernel.runtime_environment">%env(default:kernel.environment:APP_RUNTIME_ENV)%</parameter>
     <parameter key="kernel.runtime_mode">%env(query_string:default:container.runtime_mode:APP_RUNTIME_MODE)%</parameter>
@@ -9,16 +9,21 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">/home/dev/work/DriveManager/var/cache/dev</parameter>
-    <parameter key="kernel.cache_dir">/home/dev/work/DriveManager/var/cache/dev</parameter>
-    <parameter key="kernel.logs_dir">/home/dev/work/DriveManager/var/log</parameter>
+    <parameter key="kernel.build_dir">/var/drivemanager/var/cache/dev</parameter>
+    <parameter key="kernel.cache_dir">/var/drivemanager/var/cache/dev</parameter>
+    <parameter key="kernel.logs_dir">/var/drivemanager/var/log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
+      <parameter key="NelmioCorsBundle">Nelmio\CorsBundle\NelmioCorsBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
-        <parameter key="path">/home/dev/work/DriveManager/vendor/symfony/framework-bundle</parameter>
+        <parameter key="path">/var/drivemanager/vendor/symfony/framework-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\FrameworkBundle</parameter>
+      </parameter>
+      <parameter key="NelmioCorsBundle" type="collection">
+        <parameter key="path">/var/drivemanager/vendor/nelmio/cors-bundle</parameter>
+        <parameter key="namespace">Nelmio\CorsBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -47,16 +52,60 @@
     <parameter key="kernel.error_controller">error_controller</parameter>
     <parameter key="debug.file_link_format">%env(default::SYMFONY_IDE)%</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">/home/dev/work/DriveManager/var/cache/dev/DriveManager_Infrastructure_Shared_Symfony_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">/var/drivemanager/var/cache/dev/DriveManager_Infrastructure_Shared_Symfony_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">/home/dev/work/DriveManager/var/cache/dev</parameter>
+    <parameter key="router.cache_dir">/var/drivemanager/var/cache/dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="cache.prefix.seed">_/home/dev/work/DriveManager.DriveManager_Infrastructure_Shared_Symfony_KernelDevDebugContainer</parameter>
+    <parameter key="cache.prefix.seed">_/var/drivemanager.DriveManager_Infrastructure_Shared_Symfony_KernelDevDebugContainer</parameter>
     <parameter key="data_collector.templates" type="collection"/>
+    <parameter key="nelmio_cors.map" type="collection">
+      <parameter key="^/api/" type="collection">
+        <parameter key="allow_origin">true</parameter>
+        <parameter key="allow_headers" type="collection">
+          <parameter>content-type</parameter>
+          <parameter>authorization</parameter>
+        </parameter>
+        <parameter key="allow_methods" type="collection">
+          <parameter>POST</parameter>
+          <parameter>PUT</parameter>
+          <parameter>GET</parameter>
+          <parameter>DELETE</parameter>
+          <parameter>OPTIONS</parameter>
+        </parameter>
+        <parameter key="max_age">3600</parameter>
+        <parameter key="skip_same_as_origin">true</parameter>
+      </parameter>
+    </parameter>
+    <parameter key="nelmio_cors.defaults" type="collection">
+      <parameter key="allow_origin">true</parameter>
+      <parameter key="allow_credentials">false</parameter>
+      <parameter key="allow_headers" type="collection">
+        <parameter>content-type</parameter>
+        <parameter>authorization</parameter>
+      </parameter>
+      <parameter key="expose_headers" type="collection">
+        <parameter>Link</parameter>
+      </parameter>
+      <parameter key="allow_methods" type="collection">
+        <parameter>POST</parameter>
+        <parameter>PUT</parameter>
+        <parameter>GET</parameter>
+        <parameter>DELETE</parameter>
+        <parameter>OPTIONS</parameter>
+      </parameter>
+      <parameter key="max_age">3600</parameter>
+      <parameter key="hosts" type="collection"/>
+      <parameter key="origin_regex">false</parameter>
+      <parameter key="forced_allow_origin_value">null</parameter>
+      <parameter key="skip_same_as_origin">true</parameter>
+    </parameter>
+    <parameter key="nelmio_cors.cors_listener.class">Nelmio\CorsBundle\EventListener\CorsListener</parameter>
+    <parameter key="nelmio_cors.options_resolver.class">Nelmio\CorsBundle\Options\Resolver</parameter>
+    <parameter key="nelmio_cors.options_provider.config.class">Nelmio\CorsBundle\Options\ConfigProvider</parameter>
     <parameter key="console.command.ids" type="collection"/>
   </parameters>
   <services>
@@ -67,13 +116,9 @@
     </service>
     <service id="DriveManager\Infrastructure\Api\V1\DropFileController" class="DriveManager\Infrastructure\Api\V1\DropFileController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
-      <argument type="service" id="drivemanager.DropFileInterface"/>
       <argument type="service" id="drivemanager.repository"/>
     </service>
     <service id="drivemanager.repository" class="DriveManager\Infrastructure\Persistence\FileRepositoryInMemory" public="true" autowire="true" autoconfigure="true"/>
-    <service id="drivemanager.DropFileInterface" class="DriveManager\Infrastructure\DriveProvider\DropFileNextcloud" public="true" autowire="true" autoconfigure="true">
-      <tag name="container.error" message="Cannot autowire service &quot;drivemanager.DropFileInterface&quot;: argument &quot;$baseUri&quot; of method &quot;DriveManager\Infrastructure\DriveProvider\DropFileNextcloud::__construct()&quot; is type-hinted &quot;string&quot;, you should configure its value explicitly."/>
-    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag priority="100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">controller.argument_value_resolver</tag>
@@ -97,7 +142,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator._kPogEx"/>
+      <argument type="service" id=".service_locator.E3E44PV"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -178,7 +223,7 @@
       </argument>
     </service>
     <service id="http_cache.store" class="Symfony\Component\HttpKernel\HttpCache\Store">
-      <argument>/home/dev/work/DriveManager/var/cache/dev/http_cache</argument>
+      <argument>/var/drivemanager/var/cache/dev/http_cache</argument>
     </service>
     <service id="url_helper" class="Symfony\Component\HttpFoundation\UrlHelper">
       <argument type="service" id="request_stack"/>
@@ -188,7 +233,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/DriveManager_Infrastructure_Shared_Symfony_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>/var/drivemanager/var/cache/dev/DriveManager_Infrastructure_Shared_Symfony_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -247,7 +292,7 @@
     </service>
     <service id="reverse_container" class="Symfony\Component\DependencyInjection\ReverseContainer">
       <argument type="service" id="service_container"/>
-      <argument type="service" id=".service_locator.XXv1IfR"/>
+      <argument type="service" id=".service_locator.NLcq8cs"/>
     </service>
     <service id="container.env_var_processor" class="Symfony\Component\DependencyInjection\EnvVarProcessor">
       <tag name="container.env_var_processor"/>
@@ -268,7 +313,7 @@
     <service id="container.get_routing_condition_service" class="Closure" public="true">
       <tag name="routing.expression_language_function" function="service"/>
       <argument type="collection">
-        <argument type="service" id=".service_locator.Xbsa8iG"/>
+        <argument type="service" id=".service_locator.GIuJv7e"/>
         <argument>get</argument>
       </argument>
       <factory class="Closure" method="fromCallable"/>
@@ -294,7 +339,7 @@
       <tag name="container.excluded"/>
     </service>
     <service id="fragment.handler" class="Symfony\Component\HttpKernel\DependencyInjection\LazyLoadingFragmentHandler">
-      <argument type="service" id=".service_locator.lLv4pWF"/>
+      <argument type="service" id=".service_locator.va_rxC4"/>
       <argument type="service" id="request_stack"/>
       <argument>true</argument>
     </service>
@@ -321,7 +366,7 @@
       </argument>
       <argument>UTF-8</argument>
       <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
-      <argument>/home/dev/work/DriveManager</argument>
+      <argument>/var/drivemanager</argument>
       <argument type="service">
         <service>
           <argument type="service" id="request_stack"/>
@@ -357,7 +402,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="filesystem"/>
-      <argument>/home/dev/work/DriveManager</argument>
+      <argument>/var/drivemanager</argument>
       <call method="setName">
         <argument>assets:install</argument>
       </call>
@@ -409,7 +454,7 @@
     <service id="console.command.cache_pool_invalidate_tags" class="Symfony\Bundle\FrameworkBundle\Command\CachePoolInvalidateTagsCommand">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.NBUFN6A"/>
+      <argument type="service" id=".service_locator.jkL9kAz"/>
       <call method="setName">
         <argument>cache:pool:invalidate-tags</argument>
       </call>
@@ -515,10 +560,22 @@
         <argument>List classes/interfaces you can use for autowiring</argument>
       </call>
     </service>
+    <service id="console.command.dotenv_debug" class="Symfony\Component\Dotenv\Command\DebugCommand">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument>dev</argument>
+      <argument>/var/drivemanager</argument>
+      <call method="setName">
+        <argument>debug:dotenv</argument>
+      </call>
+      <call method="setDescription">
+        <argument>List all dotenv files with variables and values</argument>
+      </call>
+    </service>
     <service id="console.command.event_dispatcher_debug" class="Symfony\Bundle\FrameworkBundle\Command\EventDispatcherDebugCommand">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.9ETxUxh"/>
+      <argument type="service" id=".service_locator.h7gfyOW"/>
       <call method="setName">
         <argument>debug:event-dispatcher</argument>
       </call>
@@ -618,6 +675,18 @@
         <argument>List all secrets</argument>
       </call>
     </service>
+    <service id="console.command.secrets_reveal" class="Symfony\Bundle\FrameworkBundle\Command\SecretsRevealCommand">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="secrets.vault"/>
+      <argument type="service" id="secrets.local_vault" on-invalid="ignore"/>
+      <call method="setName">
+        <argument>secrets:reveal</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Reveal the value of a secret</argument>
+      </call>
+    </service>
     <service id="console.command.secrets_decrypt_to_local" class="Symfony\Bundle\FrameworkBundle\Command\SecretsDecryptToLocalCommand">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
@@ -655,9 +724,9 @@
     <service id="cache.app" class="Symfony\Component\Cache\Adapter\FilesystemAdapter" public="true">
       <tag name="cache.pool"/>
       <tag name="kernel.reset" method="reset"/>
-      <argument>VNIBO6k14c</argument>
+      <argument>PFljPV4QiN</argument>
       <argument>0</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/app</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="logger" on-invalid="ignore"/>
@@ -670,40 +739,40 @@
     <service id="cache.system" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="true">
       <tag name="cache.pool"/>
       <tag name="kernel.reset" method="reset"/>
-      <argument>Bv8xxuu0Q9</argument>
+      <argument>RaatUH8jCN</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/system</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/system</argument>
       <argument type="service" id="logger" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.validator" class="Symfony\Component\Cache\Adapter\AdapterInterface">
       <tag name="cache.pool"/>
       <tag name="kernel.reset" method="reset"/>
-      <argument>f9cnlq935R</argument>
+      <argument>cGMLQZa2fb</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/system</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/system</argument>
       <argument type="service" id="logger" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.serializer" class="Symfony\Component\Cache\Adapter\AdapterInterface">
       <tag name="cache.pool"/>
       <tag name="kernel.reset" method="reset"/>
-      <argument>JOvBDA8RH9</argument>
+      <argument>YdkkYujIM6</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/system</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/system</argument>
       <argument type="service" id="logger" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.property_info" class="Symfony\Component\Cache\Adapter\AdapterInterface">
       <tag name="cache.pool"/>
       <tag name="kernel.reset" method="reset"/>
-      <argument>B1T+9vcNxa</argument>
+      <argument>RyV5do5GqK</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/system</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/system</argument>
       <argument type="service" id="logger" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -713,7 +782,7 @@
       <argument></argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/system</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/system</argument>
       <argument type="service" id="logger" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -732,7 +801,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>/home/dev/work/DriveManager/var/cache/dev/pools/app</argument>
+      <argument>/var/drivemanager/var/cache/dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="logger" on-invalid="ignore"/>
@@ -871,6 +940,30 @@
       <argument type="service" id="debug.stopwatch"/>
       <argument type="service" id="logger" on-invalid="null"/>
       <argument type="service" id="request_stack" on-invalid="null"/>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="nelmio_cors.cors_listener"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>250</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="nelmio_cors.cors_listener"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="nelmio_cors.cacheable_response_vary_listener"/>
+          <argument>onResponse</argument>
+        </argument>
+        <argument>-10</argument>
+      </call>
       <call method="addListener">
         <argument>kernel.response</argument>
         <argument type="collection">
@@ -1045,7 +1138,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator._kPogEx"/>
+      <argument type="service" id=".service_locator.E3E44PV"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -1106,7 +1199,7 @@
     </service>
     <service id="routing.loader.container" class="Symfony\Component\Routing\Loader\ContainerLoader">
       <tag name="routing.loader"/>
-      <argument type="service" id=".service_locator.8PohBfi"/>
+      <argument type="service" id=".service_locator.Al6TMMn"/>
       <argument>dev</argument>
     </service>
     <service id="routing.loader.attribute" class="Symfony\Bundle\FrameworkBundle\Routing\AttributeRouteControllerLoader">
@@ -1137,10 +1230,10 @@
     <service id="router.default" class="Symfony\Bundle\FrameworkBundle\Routing\Router">
       <tag name="monolog.logger" channel="router"/>
       <tag name="container.service_subscriber" id="routing.loader"/>
-      <argument type="service" id=".service_locator.PvoQzFT.router.default"/>
+      <argument type="service" id=".service_locator.JI6krIU.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">/home/dev/work/DriveManager/var/cache/dev</argument>
+        <argument key="cache_dir">/var/drivemanager/var/cache/dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -1167,7 +1260,7 @@
     <service id="router.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\RouterCacheWarmer">
       <tag name="container.service_subscriber" id="router"/>
       <tag name="kernel.cache_warmer"/>
-      <argument type="service" id=".service_locator.cUcW89y.router.cache_warmer"/>
+      <argument type="service" id=".service_locator.YAcX0.U.router.cache_warmer"/>
     </service>
     <service id="router_listener" class="Symfony\Component\HttpKernel\EventListener\RouterListener">
       <tag name="kernel.event_subscriber"/>
@@ -1178,7 +1271,7 @@
       <argument type="service" id="request_stack"/>
       <argument type="service" id="router.request_context" on-invalid="ignore"/>
       <argument type="service" id="logger" on-invalid="ignore"/>
-      <argument>/home/dev/work/DriveManager</argument>
+      <argument>/var/drivemanager</argument>
       <argument>true</argument>
     </service>
     <service id="Symfony\Bundle\FrameworkBundle\Controller\RedirectController" class="Symfony\Bundle\FrameworkBundle\Controller\RedirectController" public="true">
@@ -1198,30 +1291,108 @@
       <argument>null</argument>
     </service>
     <service id="secrets.vault" class="Symfony\Bundle\FrameworkBundle\Secrets\SodiumVault">
-      <tag name="container.env_var_loader"/>
-      <argument>/home/dev/work/DriveManager/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
+      <argument>/var/drivemanager/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
       <argument type="service" id="secrets.decryption_key" on-invalid="ignore"/>
+    </service>
+    <service id="secrets.env_var_loader" class="Symfony\Component\DependencyInjection\StaticEnvVarLoader">
+      <tag name="container.env_var_loader"/>
+      <argument type="service" id="secrets.vault"/>
     </service>
     <service id="secrets.decryption_key" class="Symfony\Component\String\LazyString" constructor="fromCallable">
       <argument type="service" id="container.getenv"/>
       <argument>base64:default::SYMFONY_DECRYPTION_SECRET</argument>
     </service>
     <service id="secrets.local_vault" class="Symfony\Bundle\FrameworkBundle\Secrets\DotenvVault">
-      <argument>/home/dev/work/DriveManager/.env.dev.local</argument>
+      <argument>/var/drivemanager/.env.dev.local</argument>
     </service>
-    <service id=".cache_connection.GD_MSZC" class="Symfony\Component\Cache\Adapter\AbstractAdapter" constructor="createConnection">
+    <service id="type_info.type_context_factory" class="Symfony\Component\TypeInfo\TypeContext\TypeContextFactory">
+      <argument type="service" id="type_info.resolver.string" on-invalid="null"/>
+    </service>
+    <service id="type_info.resolver" class="Symfony\Component\TypeInfo\TypeResolver\TypeResolver">
+      <argument type="service" id=".service_locator.1f4T939"/>
+    </service>
+    <service id="type_info.resolver.reflection_type" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionTypeResolver">
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_parameter" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionParameterTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_type"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_property" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionPropertyTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_type"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.reflection_return" class="Symfony\Component\TypeInfo\TypeResolver\ReflectionReturnTypeResolver">
+      <argument type="service" id="type_info.resolver.reflection_type"/>
+      <argument type="service" id="type_info.type_context_factory"/>
+    </service>
+    <service id="type_info.resolver.string" class="Symfony\Component\TypeInfo\TypeResolver\StringTypeResolver"/>
+    <service id="property_info" class="Symfony\Component\PropertyInfo\PropertyInfoExtractor">
+      <argument type="iterator">
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.phpstan_extractor"/>
+        <argument type="service" id="property_info.php_doc_extractor"/>
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.php_doc_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+      <argument type="iterator">
+        <argument type="service" id="property_info.reflection_extractor"/>
+      </argument>
+    </service>
+    <service id="property_info.reflection_extractor" class="Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor">
+      <tag name="property_info.list_extractor" priority="-1000"/>
+      <tag name="property_info.type_extractor" priority="-1002"/>
+      <tag name="property_info.access_extractor" priority="-1000"/>
+      <tag name="property_info.initializable_extractor" priority="-1000"/>
+    </service>
+    <service id="property_info.phpstan_extractor" class="Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor">
+      <tag name="property_info.type_extractor" priority="-1000"/>
+    </service>
+    <service id="property_info.php_doc_extractor" class="Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor">
+      <tag name="property_info.description_extractor" priority="-1000"/>
+      <tag name="property_info.type_extractor" priority="-1001"/>
+    </service>
+    <service id=".cache_connection.MfCypIA" class="Symfony\Component\Cache\Adapter\AbstractAdapter" constructor="createConnection">
       <argument>redis://localhost</argument>
       <argument type="collection">
         <argument key="lazy">true</argument>
       </argument>
     </service>
-    <service id=".cache_connection.JKE6keX" class="Symfony\Component\Cache\Adapter\AbstractAdapter" constructor="createConnection">
+    <service id=".cache_connection.8kvDmRs" class="Symfony\Component\Cache\Adapter\AbstractAdapter" constructor="createConnection">
       <argument>memcached://localhost</argument>
       <argument type="collection">
         <argument key="lazy">true</argument>
       </argument>
     </service>
-    <service id=".service_locator.bJ.4HC5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id="nelmio_cors.cors_listener" class="Nelmio\CorsBundle\EventListener\CorsListener">
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="250"/>
+      <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse" priority="0"/>
+      <tag name="container.hot_path"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="nelmio_cors.options_resolver"/>
+    </service>
+    <service id="nelmio_cors.options_resolver" class="Nelmio\CorsBundle\Options\Resolver">
+      <argument type="collection">
+        <argument type="service" id="nelmio_cors.options_provider.config"/>
+      </argument>
+    </service>
+    <service id="nelmio_cors.options_provider.config" class="Nelmio\CorsBundle\Options\ConfigProvider">
+      <tag name="nelmio_cors.options_provider" priority="-1"/>
+      <argument>%nelmio_cors.map%</argument>
+      <argument>%nelmio_cors.defaults%</argument>
+    </service>
+    <service id="nelmio_cors.cacheable_response_vary_listener" class="Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener">
+      <tag name="kernel.event_listener" event="kernel.response" method="onResponse" priority="-10"/>
+      <tag name="container.hot_path"/>
+    </service>
+    <service id=".service_locator.1W6W_dF" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="base64" type="service_closure" id="container.env_var_processor"/>
@@ -1244,26 +1415,39 @@
         <argument key="string" type="service_closure" id="container.env_var_processor"/>
         <argument key="trim" type="service_closure" id="container.env_var_processor"/>
         <argument key="url" type="service_closure" id="container.env_var_processor"/>
+        <argument key="urlencode" type="service_closure" id="container.env_var_processor"/>
       </argument>
     </service>
-    <service id=".service_locator.y4_Zrx." class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.4wc4Ag1" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="loader" type="service_closure" id=".errored..service_locator.y4_Zrx..Symfony\Component\Config\Loader\LoaderInterface"/>
+        <argument key="loader" type="service_closure" id=".errored..service_locator.4wc4Ag1.Symfony\Component\Config\Loader\LoaderInterface"/>
       </argument>
     </service>
-    <service id=".service_locator._kPogEx" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="kernel::registerContainerConfiguration()"/>
+      <argument>kernel::registerContainerConfiguration()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.4wc4Ag1" method="withContext"/>
+    </service>
+    <service id=".service_locator.4wc4Ag1.kernel::loadRoutes()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="kernel::loadRoutes()"/>
+      <argument>kernel::loadRoutes()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.4wc4Ag1" method="withContext"/>
+    </service>
+    <service id=".service_locator.E3E44PV" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="DriveManager\Infrastructure\Shared\Symfony\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
-        <argument key="DriveManager\Infrastructure\Shared\Symfony\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
-        <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
-        <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
-        <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
-        <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
+        <argument key="DriveManager\Infrastructure\Shared\Symfony\Kernel::loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
+        <argument key="DriveManager\Infrastructure\Shared\Symfony\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
+        <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
+        <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
+        <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.4wc4Ag1.kernel::loadRoutes()"/>
+        <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.4wc4Ag1.kernel::registerContainerConfiguration()"/>
       </argument>
     </service>
-    <service id=".service_locator.lLv4pWF" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.va_rxC4" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="inline" type="service_closure" id="fragment.renderer.inline"/>
@@ -1320,31 +1504,31 @@
       <argument type="service" id="request_stack"/>
       <argument>%env(bool:default::key:web:default:kernel.runtime_mode:)%</argument>
     </service>
-    <service id=".service_locator.PvoQzFT" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.JI6krIU" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="routing.loader" type="service_closure" id="routing.loader"/>
       </argument>
     </service>
-    <service id=".service_locator.PvoQzFT.router.default" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.JI6krIU.router.default" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="router.default"/>
       <argument>router.default</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.PvoQzFT" method="withContext"/>
+      <factory service=".service_locator.JI6krIU" method="withContext"/>
     </service>
-    <service id=".service_locator.cUcW89y" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.YAcX0.U" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="router" type="service_closure" id="router.default"/>
       </argument>
     </service>
-    <service id=".service_locator.cUcW89y.router.cache_warmer" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.YAcX0.U.router.cache_warmer" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="router.cache_warmer"/>
       <argument>router.cache_warmer</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.cUcW89y" method="withContext"/>
+      <factory service=".service_locator.YAcX0.U" method="withContext"/>
     </service>
-    <service id=".service_locator.jyh.CQG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.e8Efpd0" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver" type="service_closure" id=".debug.value_resolver.argument_resolver.backed_enum_resolver"/>
@@ -1360,32 +1544,42 @@
         <argument key="argument_resolver.not_tagged_controller" type="service_closure" id=".debug.value_resolver.argument_resolver.not_tagged_controller"/>
       </argument>
     </service>
-    <service id=".service_locator.XXv1IfR" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.NLcq8cs" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="reverse_container" type="service_closure" id="reverse_container" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
-    <service id=".service_locator.Xbsa8iG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.GIuJv7e" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.NBUFN6A" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.jkL9kAz" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="cache.app" type="service_closure" id="cache.app.taggable"/>
       </argument>
     </service>
-    <service id=".service_locator.9ETxUxh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.h7gfyOW" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="event_dispatcher" type="service_closure" id="debug.event_dispatcher"/>
       </argument>
     </service>
-    <service id=".service_locator.8PohBfi" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Al6TMMn" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel" type="service_closure" id="kernel"/>
+      </argument>
+    </service>
+    <service id=".service_locator.1f4T939" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="ReflectionFunctionAbstract" type="service_closure" id="type_info.resolver.reflection_return"/>
+        <argument key="ReflectionParameter" type="service_closure" id="type_info.resolver.reflection_parameter"/>
+        <argument key="ReflectionProperty" type="service_closure" id="type_info.resolver.reflection_property"/>
+        <argument key="ReflectionType" type="service_closure" id="type_info.resolver.reflection_type"/>
+        <argument key="string" type="service_closure" id="type_info.resolver.string"/>
       </argument>
     </service>
     <service id="debug.event_dispatcher.inner" class="Symfony\Component\EventDispatcher\EventDispatcher"/>
@@ -1418,10 +1612,10 @@
         <argument type="service" id=".debug.value_resolver.argument_resolver.variadic"/>
         <argument type="service" id=".debug.value_resolver.argument_resolver.not_tagged_controller"/>
       </argument>
-      <argument type="service" id=".service_locator.jyh.CQG"/>
+      <argument type="service" id=".service_locator.e8Efpd0"/>
     </service>
-    <service id=".errored..service_locator.y4_Zrx..Symfony\Component\Config\Loader\LoaderInterface" class="Symfony\Component\Config\Loader\LoaderInterface">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.y4_Zrx.&quot;: it needs an instance of &quot;Symfony\Component\Config\Loader\LoaderInterface&quot; but this type has been excluded from autowiring."/>
+    <service id=".errored..service_locator.4wc4Ag1.Symfony\Component\Config\Loader\LoaderInterface" class="Symfony\Component\Config\Loader\LoaderInterface">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.4wc4Ag1&quot;: it needs an instance of &quot;Symfony\Component\Config\Loader\LoaderInterface&quot; but this type has been excluded from autowiring."/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -1521,6 +1715,13 @@
       <argument>false</argument>
       <argument type="service_closure" id="console.command.debug_autowiring"/>
     </service>
+    <service id=".console.command.dotenv_debug.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>debug:dotenv</argument>
+      <argument type="collection"/>
+      <argument>List all dotenv files with variables and values</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="console.command.dotenv_debug"/>
+    </service>
     <service id=".console.command.event_dispatcher_debug.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>debug:event-dispatcher</argument>
       <argument type="collection"/>
@@ -1584,6 +1785,13 @@
       <argument>false</argument>
       <argument type="service_closure" id="console.command.secrets_list"/>
     </service>
+    <service id=".console.command.secrets_reveal.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>secrets:reveal</argument>
+      <argument type="collection"/>
+      <argument>Reveal the value of a secret</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="console.command.secrets_reveal"/>
+    </service>
     <service id=".console.command.secrets_decrypt_to_local.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>secrets:decrypt-to-local</argument>
       <argument type="collection"/>
@@ -1600,7 +1808,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.tm4iAYh"/>
+      <argument type="service" id=".service_locator.uT88cDO"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -1616,6 +1824,7 @@
         <argument key="debug:container">console.command.container_debug</argument>
         <argument key="lint:container">console.command.container_lint</argument>
         <argument key="debug:autowiring">console.command.debug_autowiring</argument>
+        <argument key="debug:dotenv">console.command.dotenv_debug</argument>
         <argument key="debug:event-dispatcher">console.command.event_dispatcher_debug</argument>
         <argument key="debug:router">console.command.router_debug</argument>
         <argument key="router:match">console.command.router_match</argument>
@@ -1625,11 +1834,12 @@
         <argument key="secrets:remove">console.command.secrets_remove</argument>
         <argument key="secrets:generate-keys">console.command.secrets_generate_key</argument>
         <argument key="secrets:list">console.command.secrets_list</argument>
+        <argument key="secrets:reveal">console.command.secrets_reveal</argument>
         <argument key="secrets:decrypt-to-local">console.command.secrets_decrypt_to_local</argument>
         <argument key="secrets:encrypt-from-local">console.command.secrets_encrypt_from_local</argument>
       </argument>
     </service>
-    <service id=".service_locator.tm4iAYh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.uT88cDO" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -1646,6 +1856,7 @@
         <argument key="console.command.container_debug" type="service_closure" id=".console.command.container_debug.lazy"/>
         <argument key="console.command.container_lint" type="service_closure" id=".console.command.container_lint.lazy"/>
         <argument key="console.command.debug_autowiring" type="service_closure" id=".console.command.debug_autowiring.lazy"/>
+        <argument key="console.command.dotenv_debug" type="service_closure" id=".console.command.dotenv_debug.lazy"/>
         <argument key="console.command.event_dispatcher_debug" type="service_closure" id=".console.command.event_dispatcher_debug.lazy"/>
         <argument key="console.command.router_debug" type="service_closure" id=".console.command.router_debug.lazy"/>
         <argument key="console.command.router_match" type="service_closure" id=".console.command.router_match.lazy"/>
@@ -1654,6 +1865,7 @@
         <argument key="console.command.secrets_generate_key" type="service_closure" id=".console.command.secrets_generate_key.lazy"/>
         <argument key="console.command.secrets_list" type="service_closure" id=".console.command.secrets_list.lazy"/>
         <argument key="console.command.secrets_remove" type="service_closure" id=".console.command.secrets_remove.lazy"/>
+        <argument key="console.command.secrets_reveal" type="service_closure" id=".console.command.secrets_reveal.lazy"/>
         <argument key="console.command.secrets_set" type="service_closure" id=".console.command.secrets_set.lazy"/>
         <argument key="console.command.xliff_lint" type="service_closure" id=".console.command.xliff_lint.lazy"/>
         <argument key="console.command.yaml_lint" type="service_closure" id=".console.command.yaml_lint.lazy"/>
@@ -1694,15 +1906,24 @@
     <service id="Symfony\Component\Routing\Matcher\UrlMatcherInterface" alias="router.default"/>
     <service id="Symfony\Component\Routing\RequestContextAwareInterface" alias="router.default"/>
     <service id="Symfony\Component\Routing\RequestContext" alias="router.request_context"/>
-    <service id="cache.default_redis_provider" alias=".cache_connection.GD_MSZC"/>
-    <service id="cache.default_memcached_provider" alias=".cache_connection.JKE6keX"/>
+    <service id="Symfony\Component\TypeInfo\TypeResolver\TypeResolverInterface" alias="type_info.resolver"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyDescriptionExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyListExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface" alias="property_info"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface" alias="property_info.reflection_extractor"/>
+    <service id="Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface" alias="property_info.reflection_extractor"/>
+    <service id="cache.default_redis_provider" alias=".cache_connection.MfCypIA"/>
+    <service id="cache.default_memcached_provider" alias=".cache_connection.8kvDmRs"/>
     <service id="cache.default_doctrine_dbal_provider" alias="database_connection"/>
-    <service id="container.env_var_processors_locator" alias=".service_locator.bJ.4HC5" public="true"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator._kPogEx"/>
+    <service id="container.env_var_processors_locator" alias=".service_locator.1W6W_dF" public="true"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.E3E44PV"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
     <service id="controller_resolver" alias="debug.controller_resolver"/>
     <service id="argument_resolver" alias="debug.argument_resolver"/>
-    <service id=".service_locator.gFlme_s" alias=".service_locator.y4_Zrx."/>
+    <service id=".service_locator.diNoEIK" alias=".service_locator.4wc4Ag1"/>
   </services>
 </container>

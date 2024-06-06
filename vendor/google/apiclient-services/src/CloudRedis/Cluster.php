@@ -28,6 +28,10 @@ class Cluster extends \Google\Collection
    * @var string
    */
   public $createTime;
+  /**
+   * @var bool
+   */
+  public $deletionProtectionEnabled;
   protected $discoveryEndpointsType = DiscoveryEndpoint::class;
   protected $discoveryEndpointsDataType = 'array';
   /**
@@ -75,6 +79,8 @@ class Cluster extends \Google\Collection
    * @var string
    */
   public $uid;
+  protected $zoneDistributionConfigType = ZoneDistributionConfig::class;
+  protected $zoneDistributionConfigDataType = '';
 
   /**
    * @param string
@@ -103,6 +109,20 @@ class Cluster extends \Google\Collection
   public function getCreateTime()
   {
     return $this->createTime;
+  }
+  /**
+   * @param bool
+   */
+  public function setDeletionProtectionEnabled($deletionProtectionEnabled)
+  {
+    $this->deletionProtectionEnabled = $deletionProtectionEnabled;
+  }
+  /**
+   * @return bool
+   */
+  public function getDeletionProtectionEnabled()
+  {
+    return $this->deletionProtectionEnabled;
   }
   /**
    * @param DiscoveryEndpoint[]
@@ -307,6 +327,20 @@ class Cluster extends \Google\Collection
   public function getUid()
   {
     return $this->uid;
+  }
+  /**
+   * @param ZoneDistributionConfig
+   */
+  public function setZoneDistributionConfig(ZoneDistributionConfig $zoneDistributionConfig)
+  {
+    $this->zoneDistributionConfig = $zoneDistributionConfig;
+  }
+  /**
+   * @return ZoneDistributionConfig
+   */
+  public function getZoneDistributionConfig()
+  {
+    return $this->zoneDistributionConfig;
   }
 }
 

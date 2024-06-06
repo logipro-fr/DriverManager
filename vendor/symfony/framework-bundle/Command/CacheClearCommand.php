@@ -37,14 +37,14 @@ use Symfony\Component\HttpKernel\RebootableInterface;
 #[AsCommand(name: 'cache:clear', description: 'Clear the cache')]
 class CacheClearCommand extends Command
 {
-    private CacheClearerInterface $cacheClearer;
     private Filesystem $filesystem;
 
-    public function __construct(CacheClearerInterface $cacheClearer, ?Filesystem $filesystem = null)
-    {
+    public function __construct(
+        private CacheClearerInterface $cacheClearer,
+        ?Filesystem $filesystem = null,
+    ) {
         parent::__construct();
 
-        $this->cacheClearer = $cacheClearer;
         $this->filesystem = $filesystem ?? new Filesystem();
     }
 
@@ -232,7 +232,7 @@ EOF
         $search = [$warmupDir, str_replace('\\', '\\\\', $warmupDir)];
         $replace = str_replace('\\', '/', $realBuildDir);
         foreach (Finder::create()->files()->in($warmupDir) as $file) {
-            $content = str_replace($search, $replace, file_get_contents($file), $count);
+            $content = str_replace($search, $replace, $this->filesystem->readFile($file), $count);
             if ($count) {
                 file_put_contents($file, $content);
             }

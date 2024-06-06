@@ -29,6 +29,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\Lock\Lock;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use Symfony\Component\Mailer\Mailer;
@@ -43,6 +44,7 @@ use Symfony\Component\Semaphore\Semaphore;
 use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\TypeInfo\Type;
 use Symfony\Component\Uid\Factory\UuidFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Webhook\Controller\WebhookController;
@@ -54,14 +56,12 @@ use Symfony\Component\Workflow\WorkflowEvents;
  */
 class Configuration implements ConfigurationInterface
 {
-    private bool $debug;
-
     /**
      * @param bool $debug Whether debugging is enabled or not
      */
-    public function __construct(bool $debug)
-    {
-        $this->debug = $debug;
+    public function __construct(
+        private bool $debug,
+    ) {
     }
 
     /**
@@ -111,7 +111,12 @@ class Configuration implements ConfigurationInterface
                     ->beforeNormalization()->ifString()->then(fn ($v) => [$v])->end()
                     ->prototype('scalar')->end()
                 ->end()
-                ->scalarNode('trusted_proxies')->end()
+                ->scalarNode('trusted_proxies')
+                    ->beforeNormalization()
+                        ->ifTrue(fn ($v) => 'private_ranges' === $v)
+                        ->then(fn ($v) => implode(',', IpUtils::PRIVATE_SUBNETS))
+                    ->end()
+                ->end()
                 ->arrayNode('trusted_headers')
                     ->fixXmlConfig('trusted_header')
                     ->performNoDeepMerging()
@@ -158,6 +163,7 @@ class Configuration implements ConfigurationInterface
         $this->addAnnotationsSection($rootNode);
         $this->addSerializerSection($rootNode, $enableIfStandalone);
         $this->addPropertyAccessSection($rootNode, $willBeAvailable);
+        $this->addTypeInfoSection($rootNode, $enableIfStandalone);
         $this->addPropertyInfoSection($rootNode, $enableIfStandalone);
         $this->addCacheSection($rootNode, $willBeAvailable);
         $this->addPhpErrorsSection($rootNode);
@@ -435,7 +441,7 @@ class Configuration implements ConfigurationInterface
                                                     if (!\is_string($value)) {
                                                         return true;
                                                     }
-                                                    if (class_exists(WorkflowEvents::class) && !\in_array($value, WorkflowEvents::ALIASES)) {
+                                                    if (class_exists(WorkflowEvents::class) && !\in_array($value, WorkflowEvents::ALIASES, true)) {
                                                         return true;
                                                     }
                                                 }
@@ -478,8 +484,6 @@ class Configuration implements ConfigurationInterface
                                                 return array_values($places);
                                             })
                                         ->end()
-                                        ->isRequired()
-                                        ->requiresAtLeastOneElement()
                                         ->prototype('array')
                                             ->children()
                                                 ->scalarNode('name')
@@ -613,7 +617,10 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('resource')->isRequired()->end()
                         ->scalarNode('type')->end()
-                        ->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%')->end()
+                        ->scalarNode('cache_dir')
+                            ->defaultValue('%kernel.build_dir%')
+                            ->setDeprecated('symfony/framework-bundle', '7.1', 'Setting the "%path%.%node%" configuration option is deprecated. It will be removed in version 8.0.')
+                        ->end()
                         ->scalarNode('default_uri')
                             ->info('The default URI used to generate URLs in a non-HTTP context')
                             ->defaultNull()
@@ -1111,7 +1118,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('default_context')
                             ->normalizeKeys(false)
-                            ->useAttributeAsKey('name')
                             ->beforeNormalization()
                                 ->ifTrue(fn () => $this->debug && class_exists(JsonParser::class))
                                 ->then(fn (array $v) => $v + [JsonDecode::DETAILED_ERROR_MESSAGES => true])
@@ -1152,6 +1158,18 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('property_info')
                     ->info('Property info configuration')
                     ->{$enableIfStandalone('symfony/property-info', PropertyInfoExtractorInterface::class)}()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addTypeInfoSection(ArrayNodeDefinition $rootNode, callable $enableIfStandalone): void
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('type_info')
+                    ->info('Type info configuration')
+                    ->{$enableIfStandalone('symfony/type-info', Type::class)}()
                 ->end()
             ->end()
         ;
@@ -1587,6 +1605,7 @@ class Configuration implements ConfigurationInterface
                                             ->integerNode('delay')->defaultValue(1000)->min(0)->info('Time in ms to delay (or the initial value when multiplier is used)')->end()
                                             ->floatNode('multiplier')->defaultValue(2)->min(1)->info('If greater than 1, delay will grow exponentially for each retry: this delay = (delay * (multiple ^ retries))')->end()
                                             ->integerNode('max_delay')->defaultValue(0)->min(0)->info('Max time in ms that a retry should ever be delayed (0 = infinite)')->end()
+                                            ->floatNode('jitter')->defaultValue(0.1)->min(0)->max(1)->info('Randomness to apply to the delay (between 0 and 1)')->end()
                                         ->end()
                                     ->end()
                                     ->scalarNode('rate_limiter')
@@ -1710,17 +1729,32 @@ class Configuration implements ConfigurationInterface
                     ->fixXmlConfig('scoped_client')
                     ->beforeNormalization()
                         ->always(function ($config) {
-                            if (empty($config['scoped_clients']) || !\is_array($config['default_options']['retry_failed'] ?? null)) {
+                            if (empty($config['scoped_clients'])) {
+                                return $config;
+                            }
+
+                            $hasDefaultRateLimiter = isset($config['default_options']['rate_limiter']);
+                            $hasDefaultRetryFailed = \is_array($config['default_options']['retry_failed'] ?? null);
+
+                            if (!$hasDefaultRateLimiter && !$hasDefaultRetryFailed) {
                                 return $config;
                             }
 
                             foreach ($config['scoped_clients'] as &$scopedConfig) {
-                                if (!isset($scopedConfig['retry_failed']) || true === $scopedConfig['retry_failed']) {
-                                    $scopedConfig['retry_failed'] = $config['default_options']['retry_failed'];
-                                    continue;
+                                if ($hasDefaultRateLimiter) {
+                                    if (!isset($scopedConfig['rate_limiter']) || true === $scopedConfig['rate_limiter']) {
+                                        $scopedConfig['rate_limiter'] = $config['default_options']['rate_limiter'];
+                                    } elseif (false === $scopedConfig['rate_limiter']) {
+                                        $scopedConfig['rate_limiter'] = null;
+                                    }
                                 }
-                                if (\is_array($scopedConfig['retry_failed'])) {
-                                    $scopedConfig['retry_failed'] += $config['default_options']['retry_failed'];
+
+                                if ($hasDefaultRetryFailed) {
+                                    if (!isset($scopedConfig['retry_failed']) || true === $scopedConfig['retry_failed']) {
+                                        $scopedConfig['retry_failed'] = $config['default_options']['retry_failed'];
+                                    } elseif (\is_array($scopedConfig['retry_failed'])) {
+                                        $scopedConfig['retry_failed'] += $config['default_options']['retry_failed'];
+                                    }
                                 }
                             }
 
@@ -1824,6 +1858,10 @@ class Configuration implements ConfigurationInterface
                                     ->info('Extra options for specific HTTP client')
                                     ->normalizeKeys(false)
                                     ->variablePrototype()->end()
+                                ->end()
+                                ->scalarNode('rate_limiter')
+                                    ->defaultNull()
+                                    ->info('Rate limiter name to use for throttling requests')
                                 ->end()
                                 ->append($this->createHttpClientRetrySection())
                             ->end()
@@ -1973,6 +2011,10 @@ class Configuration implements ConfigurationInterface
                                         ->normalizeKeys(false)
                                         ->variablePrototype()->end()
                                     ->end()
+                                    ->scalarNode('rate_limiter')
+                                        ->defaultNull()
+                                        ->info('Rate limiter name to use for throttling requests')
+                                    ->end()
                                     ->append($this->createHttpClientRetrySection())
                                 ->end()
                             ->end()
@@ -2075,12 +2117,23 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('envelope')
                             ->info('Mailer Envelope configuration')
                             ->fixXmlConfig('recipient')
+                            ->fixXmlConfig('allowed_recipient')
                             ->children()
                                 ->scalarNode('sender')->end()
                                 ->arrayNode('recipients')
                                     ->performNoDeepMerging()
                                     ->beforeNormalization()
-                                    ->ifArray()
+                                        ->ifArray()
+                                        ->then(fn ($v) => array_filter(array_values($v)))
+                                    ->end()
+                                    ->prototype('scalar')->end()
+                                ->end()
+                                ->arrayNode('allowed_recipients')
+                                    ->info('A list of regular expressions that allow recipients when "recipients" option is defined.')
+                                    ->example(['.*@example\.com'])
+                                    ->performNoDeepMerging()
+                                    ->beforeNormalization()
+                                        ->ifArray()
                                         ->then(fn ($v) => array_filter(array_values($v)))
                                     ->end()
                                     ->prototype('scalar')->end()

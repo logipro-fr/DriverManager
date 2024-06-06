@@ -101,8 +101,8 @@ class ProjectsInstancesTablesAuthorizedViews extends \Google\Service\Resource
     return $this->call('get', [$params], AuthorizedView::class);
   }
   /**
-   * Gets the access control policy for a Table or Backup resource. Returns an
-   * empty policy if the resource exists but does not have a policy set.
+   * Gets the access control policy for a Bigtable resource. Returns an empty
+   * policy if the resource exists but does not have a policy set.
    * (authorizedViews.getIamPolicy)
    *
    * @param string $resource REQUIRED: The resource for which the policy is being
@@ -139,7 +139,7 @@ class ProjectsInstancesTablesAuthorizedViews extends \Google\Service\Resource
    * @opt_param string pageToken Optional. The value of `next_page_token` returned
    * by a previous call.
    * @opt_param string view Optional. The resource_view to be applied to the
-   * returned views' fields. Default to NAME_ONLY.
+   * returned AuthorizedViews' fields. Default to NAME_ONLY.
    * @return ListAuthorizedViewsResponse
    * @throws \Google\Service\Exception
    */
@@ -176,8 +176,8 @@ class ProjectsInstancesTablesAuthorizedViews extends \Google\Service\Resource
     return $this->call('patch', [$params], Operation::class);
   }
   /**
-   * Sets the access control policy on a Table or Backup resource. Replaces any
-   * existing policy. (authorizedViews.setIamPolicy)
+   * Sets the access control policy on a Bigtable resource. Replaces any existing
+   * policy. (authorizedViews.setIamPolicy)
    *
    * @param string $resource REQUIRED: The resource for which the policy is being
    * specified. See [Resource
@@ -195,8 +195,8 @@ class ProjectsInstancesTablesAuthorizedViews extends \Google\Service\Resource
     return $this->call('setIamPolicy', [$params], Policy::class);
   }
   /**
-   * Returns permissions that the caller has on the specified Table or Backup
-   * resource. (authorizedViews.testIamPermissions)
+   * Returns permissions that the caller has on the specified Bigtable resource.
+   * (authorizedViews.testIamPermissions)
    *
    * @param string $resource REQUIRED: The resource for which the policy detail is
    * being requested. See [Resource

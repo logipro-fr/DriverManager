@@ -155,6 +155,8 @@ class Product extends \Google\Collection
    * @var string
    */
   public $feedLabel;
+  protected $freeShippingThresholdType = FreeShippingThreshold::class;
+  protected $freeShippingThresholdDataType = 'array';
   /**
    * @var string
    */
@@ -209,8 +211,10 @@ class Product extends \Google\Collection
    * @var string
    */
   public $linkTemplate;
-  protected $loyaltyPointsType = LoyaltyPoints::class;
-  protected $loyaltyPointsDataType = '';
+  protected $loyaltyProgramType = LoyaltyProgram::class;
+  protected $loyaltyProgramDataType = '';
+  protected $loyaltyProgramsType = LoyaltyProgram::class;
+  protected $loyaltyProgramsDataType = 'array';
   /**
    * @var string
    */
@@ -881,6 +885,20 @@ class Product extends \Google\Collection
     return $this->feedLabel;
   }
   /**
+   * @param FreeShippingThreshold[]
+   */
+  public function setFreeShippingThreshold($freeShippingThreshold)
+  {
+    $this->freeShippingThreshold = $freeShippingThreshold;
+  }
+  /**
+   * @return FreeShippingThreshold[]
+   */
+  public function getFreeShippingThreshold()
+  {
+    return $this->freeShippingThreshold;
+  }
+  /**
    * @param string
    */
   public function setGender($gender)
@@ -1077,18 +1095,32 @@ class Product extends \Google\Collection
     return $this->linkTemplate;
   }
   /**
-   * @param LoyaltyPoints
+   * @param LoyaltyProgram
    */
-  public function setLoyaltyPoints(LoyaltyPoints $loyaltyPoints)
+  public function setLoyaltyProgram(LoyaltyProgram $loyaltyProgram)
   {
-    $this->loyaltyPoints = $loyaltyPoints;
+    $this->loyaltyProgram = $loyaltyProgram;
   }
   /**
-   * @return LoyaltyPoints
+   * @return LoyaltyProgram
    */
-  public function getLoyaltyPoints()
+  public function getLoyaltyProgram()
   {
-    return $this->loyaltyPoints;
+    return $this->loyaltyProgram;
+  }
+  /**
+   * @param LoyaltyProgram[]
+   */
+  public function setLoyaltyPrograms($loyaltyPrograms)
+  {
+    $this->loyaltyPrograms = $loyaltyPrograms;
+  }
+  /**
+   * @return LoyaltyProgram[]
+   */
+  public function getLoyaltyPrograms()
+  {
+    return $this->loyaltyPrograms;
   }
   /**
    * @param string

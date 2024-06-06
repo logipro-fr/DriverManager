@@ -30,8 +30,6 @@ class CloudAiLargeModelsVisionGenerateVideoResponse extends \Google\Collection
    * @var string[]
    */
   public $raiMediaFilteredReasons;
-  protected $raiTextFilteredReasonType = CloudAiLargeModelsVisionFilteredText::class;
-  protected $raiTextFilteredReasonDataType = '';
 
   /**
    * @param CloudAiLargeModelsVisionMedia[]
@@ -74,20 +72,6 @@ class CloudAiLargeModelsVisionGenerateVideoResponse extends \Google\Collection
   public function getRaiMediaFilteredReasons()
   {
     return $this->raiMediaFilteredReasons;
-  }
-  /**
-   * @param CloudAiLargeModelsVisionFilteredText
-   */
-  public function setRaiTextFilteredReason(CloudAiLargeModelsVisionFilteredText $raiTextFilteredReason)
-  {
-    $this->raiTextFilteredReason = $raiTextFilteredReason;
-  }
-  /**
-   * @return CloudAiLargeModelsVisionFilteredText
-   */
-  public function getRaiTextFilteredReason()
-  {
-    return $this->raiTextFilteredReason;
   }
 }
 

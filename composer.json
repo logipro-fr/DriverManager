@@ -22,7 +22,10 @@
         "symfony/browser-kit": "^7.0",
         "symfony/orm-pack": "^2.4",
         "symfony/console": "^7.1",
-        "symfony/http-foundation": "^7.0"
+        "symfony/http-foundation": "^7.0",
+        "nelmio/api-doc-bundle": "^4.26",
+        "nelmio/cors-bundle": "^2.4",
+        "symfony/dotenv": "^7.1"
     },
     "require-dev": {
         "infection/extension-installer": "0.1.2",
@@ -50,6 +53,11 @@
         "allow-plugins": {
             "infection/extension-installer": true,
             "symfony/runtime": true
+        }
+    },
+    "extra": {
+        "runtime": {
+            "dotenv_path": "src/Infrastructure/Shared/Symfony/.env"
         }
     }
 }

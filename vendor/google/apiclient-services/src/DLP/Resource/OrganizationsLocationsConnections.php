@@ -33,10 +33,10 @@ class OrganizationsLocationsConnections extends \Google\Service\Resource
    * Searches for Connections in a parent. (connections.search)
    *
    * @param string $parent Required. Parent name, typically an organization,
-   * without location. For example: "organizations/12345678".
+   * without location. For example: `organizations/12345678`.
    * @param array $optParams Optional parameters.
    *
-   * @opt_param string filter Optional. * Supported fields/values - `state` -
+   * @opt_param string filter Optional. Supported field/value: - `state` -
    * MISSING|AVAILABLE|ERROR
    * @opt_param int pageSize Optional. Number of results per page, max 1000.
    * @opt_param string pageToken Optional. Page token from a previous page to

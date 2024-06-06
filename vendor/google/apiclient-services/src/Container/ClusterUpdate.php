@@ -32,6 +32,8 @@ class ClusterUpdate extends \Google\Collection
   protected $desiredBinaryAuthorizationDataType = '';
   protected $desiredClusterAutoscalingType = ClusterAutoscaling::class;
   protected $desiredClusterAutoscalingDataType = '';
+  protected $desiredContainerdConfigType = ContainerdConfig::class;
+  protected $desiredContainerdConfigDataType = '';
   protected $desiredCostManagementConfigType = CostManagementConfig::class;
   protected $desiredCostManagementConfigDataType = '';
   protected $desiredDatabaseEncryptionType = DatabaseEncryption::class;
@@ -108,6 +110,10 @@ class ClusterUpdate extends \Google\Collection
   public $desiredMonitoringService;
   protected $desiredNetworkPerformanceConfigType = ClusterNetworkPerformanceConfig::class;
   protected $desiredNetworkPerformanceConfigDataType = '';
+  protected $desiredNodeKubeletConfigType = NodeKubeletConfig::class;
+  protected $desiredNodeKubeletConfigDataType = '';
+  protected $desiredNodePoolAutoConfigKubeletConfigType = NodeKubeletConfig::class;
+  protected $desiredNodePoolAutoConfigKubeletConfigDataType = '';
   protected $desiredNodePoolAutoConfigNetworkTagsType = NetworkTags::class;
   protected $desiredNodePoolAutoConfigNetworkTagsDataType = '';
   protected $desiredNodePoolAutoConfigResourceManagerTagsType = ResourceManagerTags::class;
@@ -244,6 +250,20 @@ class ClusterUpdate extends \Google\Collection
   public function getDesiredClusterAutoscaling()
   {
     return $this->desiredClusterAutoscaling;
+  }
+  /**
+   * @param ContainerdConfig
+   */
+  public function setDesiredContainerdConfig(ContainerdConfig $desiredContainerdConfig)
+  {
+    $this->desiredContainerdConfig = $desiredContainerdConfig;
+  }
+  /**
+   * @return ContainerdConfig
+   */
+  public function getDesiredContainerdConfig()
+  {
+    return $this->desiredContainerdConfig;
   }
   /**
    * @param CostManagementConfig
@@ -622,6 +642,34 @@ class ClusterUpdate extends \Google\Collection
   public function getDesiredNetworkPerformanceConfig()
   {
     return $this->desiredNetworkPerformanceConfig;
+  }
+  /**
+   * @param NodeKubeletConfig
+   */
+  public function setDesiredNodeKubeletConfig(NodeKubeletConfig $desiredNodeKubeletConfig)
+  {
+    $this->desiredNodeKubeletConfig = $desiredNodeKubeletConfig;
+  }
+  /**
+   * @return NodeKubeletConfig
+   */
+  public function getDesiredNodeKubeletConfig()
+  {
+    return $this->desiredNodeKubeletConfig;
+  }
+  /**
+   * @param NodeKubeletConfig
+   */
+  public function setDesiredNodePoolAutoConfigKubeletConfig(NodeKubeletConfig $desiredNodePoolAutoConfigKubeletConfig)
+  {
+    $this->desiredNodePoolAutoConfigKubeletConfig = $desiredNodePoolAutoConfigKubeletConfig;
+  }
+  /**
+   * @return NodeKubeletConfig
+   */
+  public function getDesiredNodePoolAutoConfigKubeletConfig()
+  {
+    return $this->desiredNodePoolAutoConfigKubeletConfig;
   }
   /**
    * @param NetworkTags
