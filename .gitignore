@@ -1,0 +1,6 @@
+/var/
+/vendor/
+/GoogleDriveFileForFuture/
+/AFaire.txt/
+.env.local
+.env.test
