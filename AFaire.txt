@@ -1,0 +1,11 @@
+curl -u "romain.malosse@logipro.com:AlFi5GoZI^" -X GET "https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test/hello.txt"
+
+curl -u "romain.malosse@logipro.com:AlFi5GoZI^" -X PUT --data-binary "/home/dev/work/DriveManager/tests/unit/resources/myHello.txt" "https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test/myHello.txt"
+
+curl -I -u "romain.malosse@logipro.com:AlFi5GoZI^" 'https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test/hello.txt'
+
+
+
+
+Momo2
+Faire systeme de confirmation de dépôt de fichier sur le drive

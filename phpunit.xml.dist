@@ -12,12 +12,15 @@
       <directory suffix="Test.php">tests/unit</directory>
     </testsuite>
   </testsuites>
-   <php>
+  <php>
     <env name="APP_ENV" value="test" force="true"/>
     <env name="KERNEL_CLASS" value="DriveManager\Infrastructure\Shared\Symfony\Kernel"/>
+    <env name="DATABASE_URL" value="sqlite:///var/sqlite-unit-test.db"/>
     <env name="APP_DEBUG" value="0"/>
+    <env name="SYMFONY_DOTENV_PATH" value="DriveManager\tests\unit\.env.test"/>
+    <!-- <env name="API_KEY_NEXTCLOUD" value="FakeApiKeyForNextcloud"/> -->
   </php>
-   <source>
+  <source>
     <include>
       <directory suffix=".php">src</directory>
     </include>
@@ -26,4 +29,3 @@
     </exclude>
   </source>
 </phpunit>
-

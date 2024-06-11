@@ -42,7 +42,7 @@ paths:
                   description: Name of the driver to handle the file deposit
                   example: NextCloud
       responses:
-        '200':
+        '201':
           description: File successfully deposited
           content:
             application/json:

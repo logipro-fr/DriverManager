@@ -4,25 +4,35 @@ namespace DriveManager\Tests\Application\Service\DropFile;
 
 use DriveManager\Application\Service\DropFile\DropFile;
 use DriveManager\Application\Service\DropFile\DropFileRequest;
+use DriveManager\Domain\Model\File\File;
+use DriveManager\Domain\Model\File\FileContent;
 use DriveManager\Domain\Model\File\FileId;
+use DriveManager\Domain\Model\File\FileName;
+use DriveManager\Domain\Model\File\Path;
 use DriveManager\Infrastructure\DropFileProviderFactory;
-use DriveManager\Infrastructure\Persistence\FileRepositoryInMemory;
-use PHPUnit\Framework\TestCase;
+use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
+use DriveManager\Tests\BaseTestCase;
 
-use function Safe\file_get_contents;
-
-class DropFileTest extends TestCase
+class DropFileTest extends BaseTestCase
 {
-    private const PATH_RESOURCES = '/tests/unit/resources/%s';
     private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
     private const MAIL_ADDRESS = 'romain.malosse@logipro.com';
-    private string $apiKey;
+    private string $API_KEY;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $apiKey = getenv('API_KEY_NEXTCLOUD');
+        if ($apiKey === false) {
+            throw new \RuntimeException('API_KEY environment variable is not set.');
+        } else {
+            $this->API_KEY = $apiKey;
+        }
+    }
 
     public function testDepositASimpleFile(): void
     {
-        $this->apiKey = file_get_contents(getcwd() . sprintf(self::PATH_RESOURCES, 'NextCloudApiKey.txt'));
-
-        $factory = new DropFileProviderFactory(self::BASE_URI, self::MAIL_ADDRESS, $this->apiKey);
+        $factory = new DropFileProviderFactory(self::BASE_URI, self::MAIL_ADDRESS, $this->API_KEY);
         $repository = new FileRepositoryInMemory();
         $service = new DropFile($factory, $repository);
         $request = new DropFileRequest("", "hello.txt", "Test/", "", "hello", "NextCloudMock");
@@ -39,14 +49,22 @@ class DropFileTest extends TestCase
         $this->assertEquals("Test/hello.txt", $response->createdPath . $response->createdFileToDeposit);
     }
 
-    /*public function testDepositAFileWithComplexPath(): void
+    public function testDepositAFileWithComplexPath(): void
     {
         // Arrange / Given
-        $apiSpy = new DropFileApiVfs();
-        $apiSpy->createDirectory('nextsign/contrat');
+        $apiVfs = new DropFileApiVfs();
+        $apiVfs->createDirectory('nextsign/contrat');
+        $factory = new DropFileProviderFactory(self::BASE_URI, self::MAIL_ADDRESS, $this->API_KEY);
         $repository = new FileRepositoryInMemory();
-        $service = new DropFile($apiSpy, $repository);
-        $request = new DropFileRequest("", "contrat-signed.pdf", "nextsign/contrat/", "", "contenu du pdf");
+        $service = new DropFile($factory, $repository);
+        $request = new DropFileRequest(
+            "",
+            "contrat-signed.pdf",
+            "nextsign/contrat/",
+            "",
+            "contenu du pdf",
+            "NextCloudMock"
+        );
 
         // Act / When
         $service->execute($request);
@@ -55,24 +73,19 @@ class DropFileTest extends TestCase
 
         // Assert / Then
         $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $fullPath);
-        $this->assertEquals(1, $apiSpy->count);
     }
 
     public function testCountFilesDeposit(): void
     {
         // Arrange / Given
-        $apiSpy = new DropFileApiVfs();
-        $apiSpy->createDirectory('nextsign/contrat');
-        $repository = new FileRepositoryInMemory();
-        $service = new DropFile($apiSpy, $repository);
-        $request = new DropFileRequest("", "contrat.pdf", "nextsign/", "", "contenu du contrat pdf");
-        $request2 = new DropFileRequest("", "contrat2.pdf", "nextsign/", "", "contenu du contrat pdf");
+        $apiVfs = new DropFileApiVfs();
+        $file = new File(new FileName("test"), new Path(), new FileContent("some content"));
 
         // Act / When
-        $service->execute($request);
-        $service->execute($request2);
+        $apiVfs->dropFile($file);
+        $apiVfs->dropFile($file);
 
         // Assert / Then
-        $this->assertEquals(2, $apiSpy->count);
-    }*/
+        $this->assertEquals(2, $apiVfs->count);
+    }
 }

@@ -13,7 +13,7 @@ class FileId
 
     public function __toString(): string
     {
-            return $this->id;
+        return $this->id;
     }
 
     public function equals(FileId $fileId): bool

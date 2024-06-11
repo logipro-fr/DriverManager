@@ -2,6 +2,7 @@
 
 namespace DriveManager\Infrastructure\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
 use DriveManager\Application\Service\DropFile\DropFile;
 use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\DropFileRequest;
@@ -13,31 +14,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use function Safe\file_get_contents;
-
 class DropFileController
 {
-    private const PATH_RESOURCES = '/tests/unit/resources/%s';
     private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
-    private const MAIL_ADDRESS = 'romain.malosse@logipro.com';
     private string $apiKey;
+    private string $mailAddress;
 
     public function __construct(
-        //private DropFileInterface $dropFileInterface,
-        private FileRepositoryInterface $repository
+        private FileRepositoryInterface $repository,
+        private EntityManagerInterface $entityManager
     ) {
-        $this->apiKey = file_get_contents(getcwd() . sprintf(self::PATH_RESOURCES, 'NextCloudApiKey.txt'));
+        $this->apiKey = getenv('API_KEY_NEXTCLOUD', true);
+        $this->mailAddress = getenv('MAIL_ADDRESS', true);
     }
 
     #[Route('/api/v1/dropFile/dropFile', 'DropFile', methods: ['POST'])]
     public function dropFile(Request $request): Response
     {
-        $dropFileRequest = $this->buildDropFileRequest($request);
-        $factory = new DropFileProviderFactory(self::BASE_URI, self::MAIL_ADDRESS, $this->apiKey);
-        $service = new DropFile($factory, $this->repository);
-
         try {
+            $dropFileRequest = $this->buildDropFileRequest($request);
+            $factory = new DropFileProviderFactory(self::BASE_URI, $this->mailAddress, $this->apiKey);
+            $service = new DropFile($factory, $this->repository);
             $service->execute($dropFileRequest);
+            $this->entityManager->flush();
         } catch (Exception $e) {
             $className = (new \ReflectionClass($e))->getShortName();
             return new JsonResponse(

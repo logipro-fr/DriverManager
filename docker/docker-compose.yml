@@ -28,6 +28,39 @@ services:
       - "$PWD/..:/var/drivemanager"
       - "$PWD/..:$PWD/.."
     working_dir: $PWD/..
+    depends_on:
+      drivemanager-mariadb:
+        condition: service_started
+    networks:
+      - drivemanager-networks
+  
+  drivemanager-mariadb:
+    image: drivemanager-mariadb:latest
+    container_name: "drivemanager-mariadb"
+    build:
+      context: .
+      dockerfile: mariadb/Dockerfile
+      tags:
+        - latest
+    restart: always
+    volumes:
+      - /home/debian/projet/drivemanager-mariadb/_data:/var/lib/mysql
+      - ../../mariabackup:/backup
+    env_file:
+      - ./mariadb/db.env
+    networks:
+      - drivemanager-networks
+
+  drivemanager-phpmyadmin:
+    image: phpmyadmin
+    container_name: "drivemanager-phpmyadmin"
+    restart: always
+    environment:
+      PMA_HOST: drivemanager-mariadb
+    depends_on:
+      - drivemanager-mariadb
+    ports:
+      - "172.17.0.1:11190:80"
     networks:
       - drivemanager-networks
 

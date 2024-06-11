@@ -8,30 +8,37 @@ use DriveManager\Domain\Model\File\File;
 use DriveManager\Domain\Model\File\FileContent;
 use DriveManager\Domain\Model\File\FileName;
 use DriveManager\Domain\Model\File\Path;
+use DriveManager\Tests\BaseTestCase;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\CurlHttpClient;
 
 use function Safe\file_get_contents;
 use function Safe\getcwd;
 
-class DropFileNextcloudTest extends TestCase
+class DropFileNextcloudTest extends BaseTestCase
 {
     private DropFileNextcloud $nextcloudClient;
-    private string $apiKey;
-    private const PATH_RESOURCES = '/tests/unit/resources/%s';
+    private string $API_KEY;
     private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
     private const PATH_ACCESS_NEXTCLOUD = 'files/romain.malosse@logipro.com/Test/';
     private Path $path;
+
     protected function setUp(): void
     {
-        $this->apiKey = file_get_contents(getcwd() . sprintf(self::PATH_RESOURCES, 'NextCloudApiKey.txt'));
+        $apiKey = getenv('API_KEY');
+        if ($apiKey === false) {
+            throw new \RuntimeException('API_KEY environment variable is not set.');
+        } else {
+            $this->API_KEY = $apiKey;
+        }
+
         $this->path = new Path(self::BASE_URI . self::PATH_ACCESS_NEXTCLOUD);
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
             'romain.malosse@logipro.com',
-            $this->apiKey,
+            $this->API_KEY,
             new CurlHttpClient([
-                'auth_basic' => ['romain.malosse@logipro.com', $this->apiKey]
+                'auth_basic' => ['romain.malosse@logipro.com', $this->API_KEY]
             ])
         );
     }

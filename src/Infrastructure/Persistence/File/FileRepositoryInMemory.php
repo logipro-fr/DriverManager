@@ -1,10 +1,9 @@
 <?php
 
-namespace DriveManager\Infrastructure\Persistence ;
+namespace DriveManager\Infrastructure\Persistence\File;
 
 use DriveManager\Domain\Model\File\File;
 use DriveManager\Domain\Model\File\FileId;
-use DriveManager\Domain\Model\File\FileName;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 
 class FileRepositoryInMemory implements FileRepositoryInterface

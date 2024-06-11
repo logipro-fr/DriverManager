@@ -1,0 +1,21 @@
+doctrine:
+  dbal:
+    url: "%env(resolve:DATABASE_URL)%"
+    types:
+      file_id: DriveManager\Infrastructure\Persistence\Doctrine\Types\FileIdType
+      file_content: DriveManager\Infrastructure\Persistence\Doctrine\Types\FileContentType
+      file_name: DriveManager\Infrastructure\Persistence\Doctrine\Types\FileNameType
+      path: DriveManager\Infrastructure\Persistence\Doctrine\Types\PathType
+      
+  orm:
+    auto_generate_proxy_classes: true
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+    auto_mapping: true
+    controller_resolver:
+      auto_mapping: true
+    mappings:
+      DriveManager:
+        is_bundle: false
+        type: xml
+        dir: "%kernel.project_dir%/src/Infrastructure/Persistence/Doctrine/Mapping"
+        prefix: 'DriveManager\Domain\Model'

@@ -22,13 +22,12 @@ class DropAFileContext implements Context
 {
     private vfsStreamDirectory $vfs;
     private DropFileResponse $response;
-    private FileRepositoryInMemory $repository;
     private string $fullPathName;
 
     /**
      * @Given the drive is NextCloudMock
      */
-    public function theDriveIsNextcloudmock()
+    public function theDriveIsNextcloudmock(): void
     {
         throw new PendingException();
     }
@@ -61,7 +60,7 @@ class DropAFileContext implements Context
             "some content",
             "NextCloudMock"
         );
-        $this->repository = new FileRepositoryInMemory();
+        $repository = new FileRepositoryInMemory();
         $dropFileService = new DropFileForFileSystem($this->vfs->url());
         $dropFileService->createDirectory($directoryName);
         $service = new DropFile($dropFileService, $this->repository);
