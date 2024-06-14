@@ -6,8 +6,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use DriveManager\Application\Service\DropFile\DropFile;
 use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\DropFileRequest;
+use DriveManager\Domain\Model\File\FileId;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\DropFileProviderFactory;
+use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DropFileController
 {
-    private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
+    private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/';
     private string $apiKey;
     private string $mailAddress;
 

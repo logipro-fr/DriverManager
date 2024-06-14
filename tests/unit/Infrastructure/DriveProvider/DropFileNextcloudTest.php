@@ -49,7 +49,7 @@ class DropFileNextcloudTest extends TestCase
     public function testDropFileFail(): void
     {
         $this->expectException(FailUploadingFileException::class);
-        $this->expectExceptionMessageMatches('/Download failed : \d{3}/');
+        $this->expectExceptionMessageMatches('/Download failed : error \d{3}/');
 
         $client = new MockHttpClient(new MockResponse('', ['http_code' => 400]));
         $this->nextcloudClient = new DropFileNextcloud(

@@ -23,7 +23,7 @@ class DropFileProviderFactory extends ProviderAbstractFactory
                 return new DropFileNextcloud($this->baseUri, $this->mail, $this->password);
             case 'NextCloudMock':
                 return new DropFileNextcloud($this->baseUri, $this->mail, $this->password, $this->createMock());
-            case 'FileSysteme   ':
+            case 'FileSysteme':
                 return new DropFileForFileSystem("root");
             default:
                 throw new BadApiNameException("A wrong api name is enter in paramater of function create");

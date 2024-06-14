@@ -21,7 +21,7 @@ abstract class FileRepositoryTestBase extends TestCase
     }
 
     abstract protected function init(): void;
-    
+
     public function testFindById(): void
     {
         $file = new File(new FileName("test"), new Path(), new FileContent(), new FileId("unId"));

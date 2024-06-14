@@ -7,36 +7,22 @@ parameters:
   app.api_key: '%env(API_KEY)%'
 
 services:
-  # default configuration for services in *this* file
   _defaults:
-    autowire: true # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    autowire: true
+    autoconfigure: true
 
   DriveManager\Infrastructure\Api\V1\DropFileController:  
     autowire: true
     arguments:
       $repository: '@drivemanager.repository'
-      $dropFileInterface: '@drivemanager.DropFileInterface'
+      $dropFileInterface: '@file.DropFileInterface'
       
   drivemanager.repository:
     public: true
     autowire: true
     class: DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine
-    
-  # drivemanager.DropFileInterface:
-  #   public: true
-  #   autowire: true
-  #   class: DriveManager\Infrastructure\DriveProvider\DropFileNextcloud
-  #   arguments:
-  #     $baseUri: 'https://nuage.logipro.com/owncloud/remote.php/dav/'
-  #     $mailAddress: 'romain.malosse@logipro.com'
-  #     $password: 'APIKEY'
-  #     $fileId: 'unIdDeTest'
 
-
-  # Correction ici: aliaser l'interface vers l'implémentation
   DriveManager\Application\Service\DropFile\DropFileInterface: "@drivemanager.DropFileInterface"
-  
   DriveManager\Domain\Model\File\FileRepositoryInterface: "@drivemanager.repository"
 
   DriveManager\Infrastructure\Api\V1\:

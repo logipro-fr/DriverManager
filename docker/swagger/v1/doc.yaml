@@ -28,15 +28,15 @@ paths:
                 filePathToDirectory:
                   type: string
                   description: Path to the directory where the file will be deposited
-                  example: /Rapports
+                  example: /Test/testFile.txt
                 fileDate:
                   type: string
                   description: Date of the file
-                  example: 2024-06-05T10:30:00Z
+                  example: 2024-06-05T10:30:00
                 fileContent:
                   type: string
                   description: Content of the file
-                  example: This is a test file content
+                  example: Some content
                 driver:
                   type: string
                   description: Name of the driver to handle the file deposit

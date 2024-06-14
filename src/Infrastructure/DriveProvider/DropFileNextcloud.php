@@ -6,6 +6,7 @@ use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\Exceptions\FailUploadingFileException;
 use DriveManager\Domain\Model\File\File;
 use DriveManager\Domain\Model\File\FileName;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DropFileNextcloud implements DropFileInterface
@@ -28,6 +29,7 @@ class DropFileNextcloud implements DropFileInterface
 
     public function dropFile(File $file): void
     {
+        var_dump($file->getPath());
         $requestOptions = [
             'body' => $file->getContent()
         ];
@@ -35,7 +37,7 @@ class DropFileNextcloud implements DropFileInterface
         $response = $this->client->request('PUT', $file->getPath(), $requestOptions);
 
         if (!in_array($response->getStatusCode(), self::SUCCESS_STATUS_CODES)) {
-            throw new FailUploadingFileException('Download failed : ' . $response->getStatusCode());
+            throw new FailUploadingFileException('Download failed : error ' . $response->getStatusCode());
         }
     }
 

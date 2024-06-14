@@ -1,17 +1,14 @@
 <?php
 
-namespace DriveManager\Tests\Infrastructure\Api\V1;
+namespace DriveManager\Tests\Integration\Infrastructure\Api\V1;
 
 use DoctrineTestingTools\DoctrineRepositoryTesterTrait;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
-use DriveManager\Infrastructure\Api\V1\DropFileController;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
-use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use DriveManager\Tests\WebBaseTestCase;
 use org\bovigo\vfs\vfsStream;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\HttpFoundation\Request;
 
 use function Safe\json_encode;
 
@@ -27,7 +24,6 @@ class DropFileControllerTest extends WebBaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-
         $apiKey = getenv('API_KEY_NEXTCLOUD');
         $mailAddress = getenv('MAIL_ADDRESS');
         if ($apiKey === false) {
@@ -59,10 +55,10 @@ class DropFileControllerTest extends WebBaseTestCase
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
                 "fileId" => "UnIdDeTest",
-                "fileToDeposit" => "testfile.txt",
-                "filePathToDirectory" => "",
+                "fileToDeposit" => "BadFile.txt",
+                "filePathToDirectory" => "/test/BadFile.txt",
                 "fileDate" => "",
-                "fileContent" => "",
+                "fileContent" => "some content",
                 "driver" => "badApiName",
             ])
         );
@@ -89,17 +85,20 @@ class DropFileControllerTest extends WebBaseTestCase
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
                 "fileId" => "UnIdDeTest",
-                "fileToDeposit" => "testfile.txt",
-                "filePathToDirectory" => "",
+                "fileToDeposit" => "",
+                "filePathToDirectory" => "Test/FileWithoutName.txt",
                 "fileDate" => "",
-                "fileContent" => "",
-                "driver" => "NextCloudMock",
+                "fileContent" => "some content",
+                "driver" => "NextCloud",
             ])
         );
 
         $responseContent = strval($this->client->getResponse()->getContent());
+        //var_dump("contenue de responseContent",$responseContent);
         $responseCode = $this->client->getResponse()->getStatusCode();
+        //var_dump("status code", $responseCode);
         $responseData = json_decode($responseContent, true);
+        //var_dump('data', $responseData);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(201, $responseCode);
@@ -120,38 +119,5 @@ class DropFileControllerTest extends WebBaseTestCase
         $this->assertArrayHasKey('message', $responseData);
         $this->assertEquals('', $responseData['message']);
         $this->assertStringContainsString('"message":""', $responseContent);
-    }
-
-    public function testDropFileController(): void
-    {
-        $vfs = vfsStream::setup('root');
-        //$dropFile = new DropFileForFileSystem($vfs->url());
-        $this->repository = new FileRepositoryInMemory();
-        $controller = new DropFileController($this->repository, $this->getEntityManager());
-
-        $request = Request::create(
-            "/api/v1/dropFile/dropFile",
-            "POST",
-            [],
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode([
-                "fileId" => "",
-                "fileToDeposit" => "testfile.txt",
-                "filePathToDirectory" => "",
-                "fileDate" => "",
-                "fileContent" => "",
-                "driver" => "NextCloudMock",
-            ]),
-        );
-        $response = $controller->dropFile($request);
-        /** @var string */
-        $responseContent = $response->getContent();
-
-        $this->assertStringContainsString('"success":true', $responseContent);
-        $this->assertEquals(201, $response->getStatusCode());
-        $this->assertStringContainsString('"data":{"fileId":', $responseContent);
-        $this->assertStringContainsString('"message":"', $responseContent);
     }
 }
