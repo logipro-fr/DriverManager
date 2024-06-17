@@ -25,3 +25,4 @@ class FileRepositoryDoctrineTest extends FileRepositoryTestBase
         $this->assertTrue(true);
     }
 }
+

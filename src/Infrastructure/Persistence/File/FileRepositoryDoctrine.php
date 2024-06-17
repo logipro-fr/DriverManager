@@ -4,10 +4,10 @@ namespace DriveManager\Infrastructure\Persistence\File;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use DriveManager\Domain\Exceptions\FileNotFoundException;
 use DriveManager\Domain\Model\File\File;
 use DriveManager\Domain\Model\File\FileId;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
+use DriveManager\Infrastructure\Persistence\File\Exceptions\FileNotFoundException;
 
 /**
  * @extends EntityRepository<File>
@@ -29,7 +29,7 @@ class FileRepositoryDoctrine extends EntityRepository implements FileRepositoryI
     {
         $file = $this->getEntityManager()->find(File::class, $searchId);
         if ($file === null) {
-            throw new FileNotFoundException(sprintf("Error can't find the postId %s", $searchId), 400);
+            throw new FileNotFoundException(sprintf("Error can't find the fileId %s", $searchId), 400);
         }
         return $file;
     }
