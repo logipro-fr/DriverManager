@@ -12,7 +12,7 @@ class FileRepositoryInMemory implements FileRepositoryInterface
     /**
      * @var array<string, File> $files
      */
-    private array $files = []; // Initialisation de la propriété
+    private array $files = [];
 
     public function add(File $file): void
     {
