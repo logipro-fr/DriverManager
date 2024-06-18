@@ -38,7 +38,7 @@ class DropFileTest extends TestCase
     {
         $repository = new FileRepositoryInMemory();
         $factory = new DropFileProviderFactory(self::BASE_URI, $this->MAIL_ADDRESS, $this->API_KEY);
-        $request = new DropFileRequest("unId", "testFile.txt", "Test/testFile", "", "some content", "NextCloud");
+        $request = new DropFileRequest("unId", "testFile.txt", "Test/", "", "some content", "NextCloud");
         $service = new DropFile($factory, $repository);
 
         $service->execute($request);

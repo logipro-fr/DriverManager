@@ -24,7 +24,8 @@ class DropFile
         $dropFileApi = $this->dropfileProviderfactory->create($request->apiName);
 
         $fileName = new FileName($request->fileToDeposit);
-        $path = new Path($request->filePathToDirectory);
+        $fullPath = $request->filePathToDirectory . $request->fileToDeposit;
+        $path = new Path($fullPath);
         $fileContent = new FileContent($request->fileContent);
         $file = new File($fileName, $path, $fileContent);
         $this->repository->add($file);

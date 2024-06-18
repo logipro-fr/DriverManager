@@ -51,7 +51,7 @@ class DropFileTest extends BaseTestCase
         // Assert / Then
         $this->assertEquals("hello.txt", $response->createdFileToDeposit);
         $this->assertEquals($expectedId, $actualId);
-        $this->assertEquals("Test/hello.txt", $response->createdPath . $response->createdFileToDeposit);
+        $this->assertEquals("Test/hello.txt", $response->createdPath);
     }
 
     public function testDepositAFileWithComplexPath(): void
@@ -74,7 +74,7 @@ class DropFileTest extends BaseTestCase
         // Act / When
         $service->execute($request);
         $response = $service->getResponse();
-        $fullPath = $response->createdPath . $response->createdFileToDeposit;
+        $fullPath = $response->createdPath;
 
         // Assert / Then
         $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $fullPath);

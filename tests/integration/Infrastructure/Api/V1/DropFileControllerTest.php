@@ -56,7 +56,7 @@ class DropFileControllerTest extends WebBaseTestCase
             json_encode([
                 "fileId" => "UnIdDeTest",
                 "fileToDeposit" => "BadFile.txt",
-                "filePathToDirectory" => "/test/BadFile.txt",
+                "filePathToDirectory" => "/test/",
                 "fileDate" => "",
                 "fileContent" => "some content",
                 "driver" => "badApiName",
@@ -85,10 +85,10 @@ class DropFileControllerTest extends WebBaseTestCase
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
                 "fileId" => "UnIdDeTest",
-                "fileToDeposit" => "testFile",
-                "filePathToDirectory" => "Test/testFile.txt.txt",
+                "fileToDeposit" => "testFile.txt",
+                "filePathToDirectory" => "Test/",
                 "fileDate" => "",
-                "fileContent" => "some content",
+                "fileContent" => "some content for a test",
                 "driver" => "NextCloud",
             ])
         );
