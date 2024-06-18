@@ -57,8 +57,6 @@ class DropFileTest extends BaseTestCase
     public function testDepositAFileWithComplexPath(): void
     {
         // Arrange / Given
-        $apiVfs = new DropFileApiVfs();
-        $apiVfs->createDirectory('nextsign/contrat');
         $factory = new DropFileProviderFactory(self::BASE_URI, $this->MAIL_ADDRESS, $this->API_KEY);
         $repository = new FileRepositoryInMemory();
         $service = new DropFile($factory, $repository);
@@ -74,10 +72,9 @@ class DropFileTest extends BaseTestCase
         // Act / When
         $service->execute($request);
         $response = $service->getResponse();
-        $fullPath = $response->createdPath;
 
         // Assert / Then
-        $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $fullPath);
+        $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $response->createdPath);
     }
 
     public function testCountFilesDeposit(): void
