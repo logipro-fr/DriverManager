@@ -19,7 +19,7 @@ class DropFileForFileSystemTest extends TestCase
 {
     private vfsStreamDirectory $root;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->root = vfsStream::setup('root');
     }

@@ -29,7 +29,6 @@ class DropFileNextcloud implements DropFileInterface
 
     public function dropFile(File $file): void
     {
-        var_dump($file->getPath());
         $requestOptions = [
             'body' => $file->getContent()
         ];

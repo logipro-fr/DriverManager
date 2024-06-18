@@ -24,6 +24,15 @@ class DropAFileContext implements Context
     private DropFileResponse $response;
     private string $fullPathName;
 
+
+    /**
+     * @Given the drive is FileSysteme
+     */
+    public function theDriveIsFilesysteme()
+    {
+        throw new PendingException();
+    }
+    
     /**
      * @Given the drive is NextCloudMock
      */

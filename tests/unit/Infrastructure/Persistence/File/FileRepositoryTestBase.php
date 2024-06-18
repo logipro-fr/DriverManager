@@ -45,4 +45,3 @@ abstract class FileRepositoryTestBase extends TestCase
         $this->fileRepository->findById(new FileId("unknowId"));
     }
 }
-

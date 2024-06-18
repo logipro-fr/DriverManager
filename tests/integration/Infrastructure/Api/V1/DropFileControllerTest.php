@@ -21,7 +21,7 @@ class DropFileControllerTest extends WebBaseTestCase
     private FileRepositoryInterface $repository;
     private KernelBrowser $client;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $apiKey = getenv('API_KEY_NEXTCLOUD');
@@ -85,8 +85,8 @@ class DropFileControllerTest extends WebBaseTestCase
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
                 "fileId" => "UnIdDeTest",
-                "fileToDeposit" => "",
-                "filePathToDirectory" => "Test/FileWithoutName.txt",
+                "fileToDeposit" => "testFile",
+                "filePathToDirectory" => "Test/testFile.txt.txt",
                 "fileDate" => "",
                 "fileContent" => "some content",
                 "driver" => "NextCloud",
@@ -94,11 +94,8 @@ class DropFileControllerTest extends WebBaseTestCase
         );
 
         $responseContent = strval($this->client->getResponse()->getContent());
-        //var_dump("contenue de responseContent",$responseContent);
         $responseCode = $this->client->getResponse()->getStatusCode();
-        //var_dump("status code", $responseCode);
         $responseData = json_decode($responseContent, true);
-        //var_dump('data', $responseData);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(201, $responseCode);
