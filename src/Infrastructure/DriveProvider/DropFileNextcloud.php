@@ -16,10 +16,10 @@ class DropFileNextcloud implements DropFileInterface
 
     public function __construct(
         string $baseUri,
-        string $mailAddress,
-        string $password,
-        ?HttpClientInterface $client = null
+        ?HttpClientInterface $client = null,
     ) {
+        list($mailAddress,$password) = explode(" ", $_ENV["NEXTCLOUD_CREDENTIALS"]) ;
+
         if ($client == null) {
             $this->client = (new HttpClientFactory())->create($baseUri, $mailAddress, $password);
         } else {

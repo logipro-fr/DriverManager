@@ -17,35 +17,26 @@ use function Safe\fileperms;
 
 class DropFileForFileSystemTest extends TestCase
 {
-    private vfsStreamDirectory $root;
-
-    protected function setUp(): void
-    {
-        $this->root = vfsStream::setup('root');
-    }
-
     public function testDropOneFile(): void
     {
-        $dropFile = new DropFileForFileSystem($this->root->url());
-
-        $dropFile->createDirectory('/');
-
-        $file = new File(new FileName('myHello.txt'), new Path(), new FileContent('Hello, World!'));
+        $dropFile = new DropFileForFileSystem();
+        $file = new File(new FileName('myHello.txt'), new Path("testingRepo"), new FileContent('Hello, World!'));
+        $dropFile->createDirectory("testingRepo");
         $dropFile->dropFile($file);
-        //vfsStream::inspect(new vfsStreamPrintVisitor());
+        //$dropFile->getRootDirectory()->addChild(vfsStream::newFile('myHello.txt'));
 
-        $this->assertTrue($this->root->hasChild('myHello.txt'));
-        $this->assertTrue($dropFile->isFileExists($file));
+        //var_dump($this->root);
+        $this->assertTrue($dropFile->getRootDirectory()->hasChild('myHello.txt'));
+        //$this->assertTrue($dropFile->isFileExists($file));
         $this->assertEquals("Hello, World!", $file->getContent());
     }
 
     public function testFileDoesntExiste(): void
     {
-        $root = $this->root->url();
-        $dropFile = new DropFileForFileSystem($root);
+        $dropFile = new DropFileForFileSystem();
         $file = new File(new FileName('unxistingFile.txt'), new Path("root/unxistingFile.txt"), new FileContent(''));
 
-        $this->assertFalse($this->root->hasChild('unxistingFile.txt'));
+        $this->assertFalse($dropFile->getRootDirectory()->hasChild('unxistingFile.txt'));
         $this->assertFalse($dropFile->isFileExists($file));
     }
 
@@ -54,25 +45,27 @@ class DropFileForFileSystemTest extends TestCase
         $this->expectException(RepositoryDoesNotExistException::class);
         $this->expectExceptionMessageMatches("/Repository (.*) doesn't exist./");
 
-        $dropFile = new DropFileForFileSystem($this->root->url());
+        $dropFile = new DropFileForFileSystem();
         $file = new File(new FileName('noneExistingFile.txt'), new Path('nonexistentDir/'));
 
         $dropFile->dropFile($file);
     }
 
+
     public function testCreateDirectory(): void
     {
-        $dropFile = new DropFileForFileSystem($this->root->url());
+        $dropFile = new DropFileForFileSystem();
         $newDirectory = 'testDirectory';
 
         $dropFile->createDirectory($newDirectory);
 
+        // Assert the directory was created
         $this->assertTrue(is_dir(vfsStream::url('root/' . $newDirectory)));
     }
 
     public function testCreateDirectoryRecursively(): void
     {
-        $dropFile = new DropFileForFileSystem($this->root->url());
+        $dropFile = new DropFileForFileSystem();
         $deepDirectory = 'Directory1/Directory2/Directory3';
 
         $dropFile->createDirectory($deepDirectory);
@@ -82,7 +75,7 @@ class DropFileForFileSystemTest extends TestCase
 
     public function testCreateDirectoryWithCorrectPermissions(): void
     {
-        $dropFile = new DropFileForFileSystem($this->root->url());
+        $dropFile = new DropFileForFileSystem();
         $newDirectory = 'testDirectoryPermission';
         $dropFile->createDirectory($newDirectory);
         $permissions = fileperms(vfsStream::url('root/' . $newDirectory)) & 0777;

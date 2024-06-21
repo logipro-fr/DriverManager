@@ -20,32 +20,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class DropFileController
 {
     private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/';
-    private string $API_KEY;
-    private string $MAIL_ADDRESS;
 
     public function __construct(
         private FileRepositoryInterface $repository,
         private EntityManagerInterface $entityManager
     ) {
-        $apiKey = getenv('API_KEY_NEXTCLOUD');
-        $mailAddress = getenv('MAIL_ADDRESS');
-        if ($apiKey === false) {
-            throw new RuntimeException('API_KEY environment variable is not set.');
-        } elseif ($mailAddress === false) {
-            throw new RuntimeException('MAIL_ADDRESS environment variable is not set.');
-        } else {
-            $this->API_KEY = $apiKey;
-            $this->MAIL_ADDRESS = $mailAddress;
-        }
     }
-
 
     #[Route('/api/v1/dropFile/dropFile', 'DropFile', methods: ['POST'])]
     public function dropFile(Request $request): Response
     {
         try {
             $dropFileRequest = $this->buildDropFileRequest($request);
-            $factory = new DropFileProviderFactory(self::BASE_URI, $this->MAIL_ADDRESS, $this->API_KEY);
+            $factory = new DropFileProviderFactory(self::BASE_URI);
             $service = new DropFile($factory, $this->repository);
             $service->execute($dropFileRequest);
             $this->entityManager->flush();

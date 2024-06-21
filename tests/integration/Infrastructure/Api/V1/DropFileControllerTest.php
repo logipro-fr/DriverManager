@@ -3,12 +3,15 @@
 namespace DriveManager\Tests\Integration\Infrastructure\Api\V1;
 
 use DoctrineTestingTools\DoctrineRepositoryTesterTrait;
+use DriveManager\Domain\Model\File\File;
+use DriveManager\Domain\Model\File\FileId;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
 use DriveManager\Tests\WebBaseTestCase;
 use org\bovigo\vfs\vfsStream;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Dotenv\Dotenv;
 
 use function Safe\json_encode;
 
@@ -16,33 +19,17 @@ class DropFileControllerTest extends WebBaseTestCase
 {
     use DoctrineRepositoryTesterTrait;
 
-    private string $API_KEY;
-    private string $MAIL_ADDRESS;
-    private FileRepositoryInterface $repository;
     private KernelBrowser $client;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $apiKey = getenv('API_KEY_NEXTCLOUD');
-        $mailAddress = getenv('MAIL_ADDRESS');
-        if ($apiKey === false) {
-            throw new RuntimeException('API_KEY environment variable is not set.');
-        } elseif ($mailAddress === false) {
-            throw new RuntimeException('MAIL_ADDRESS environment variable is not set.');
-        } else {
-            $this->API_KEY = $apiKey;
-            $this->MAIL_ADDRESS = $mailAddress;
-        }
-
         $this->initDoctrineTester();
         $this->clearTables(["files"]);
 
-        $this->client = static::createClient(["debug" => false]);
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(getcwd() . '/src/Infrastructure/Shared/Symfony/.env.local');
 
-        /** @var FileRepositoryDoctrine $autoInjectedRepo */
-        $autoInjectedRepo = $this->client->getContainer()->get("drivemanager.repository");
-        $this->repository = $autoInjectedRepo;
+        $this->client = static::createClient(["debug" => false]);
     }
 
     public function testControllerException(): void

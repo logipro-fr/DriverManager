@@ -26,18 +26,6 @@ class DropFileControllerTest extends WebBaseTestCase
 
     protected function setUp(): void
     {
-        // parent::setUp();
-        // $apiKey = getenv('API_KEY_NEXTCLOUD');
-        // $mailAddress = getenv('MAIL_ADDRESS');
-        // if ($apiKey === false) {
-        //     throw new RuntimeException('API_KEY environment variable is not set.');
-        // } elseif ($mailAddress === false) {
-        //     throw new RuntimeException('MAIL_ADDRESS environment variable is not set.');
-        // } else {
-        //     $this->API_KEY = $apiKey;
-        //     $this->MAIL_ADDRESS = $mailAddress;
-        // }
-
         $this->initDoctrineTester();
         $this->clearTables(["files"]);
 

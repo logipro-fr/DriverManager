@@ -18,7 +18,7 @@
     <env name="DATABASE_URL" value="sqlite:///var/sqlite-unit-test.db"/>
     <env name="APP_DEBUG" value="0"/>
     <env name="SYMFONY_DOTENV_PATH" value="DriveManager\tests\unit\.env.test"/>
-    <!-- <env name="API_KEY_NEXTCLOUD" value="FakeApiKeyForNextcloud"/> -->
+    <env name="NEXTCLOUD_CREDENTIALS" value="mailAddress password"/>
   </php>
   <source>
     <include>

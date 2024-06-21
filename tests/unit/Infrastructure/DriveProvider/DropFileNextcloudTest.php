@@ -24,25 +24,17 @@ class DropFileNextcloudTest extends TestCase
 {
     private const UPLOAD_FILE_PATH = 'files/romain.malosse@logipro.com/Test/';
     private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
-    private const MAIL_ADDRESS = 'romain.malosse@logipro.com';
     private DropFileNextcloud $nextcloudClient;
     /**
      * @var array<int, array{method: string, url: string, options: array<string, mixed>}>
      */
     private array $capturedRequests = [];
-    private string $API_KEY_NEXTCLOUD;
 
     protected function setUp(): void
     {
-        $this->API_KEY_NEXTCLOUD = getenv('API_KEY_NEXTCLOUD');
-        if ($this->API_KEY_NEXTCLOUD === false) {
-            throw new \RuntimeException('API_KEY is not set in the environment variables.');
-        }
-
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD
+            //apiKey : "FakeCredentials"
         );
     }
 
@@ -54,9 +46,7 @@ class DropFileNextcloudTest extends TestCase
         $client = new MockHttpClient(new MockResponse('', ['http_code' => 400]));
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD,
-            $client
+            $client,
         );
         $file = new File(new FileName('testfile.txt'), new Path('Bad/link/testfile.txt'));
 
@@ -77,9 +67,7 @@ class DropFileNextcloudTest extends TestCase
 
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD,
-            $client
+            $client,
         );
 
         $this->nextcloudClient->dropFile($file);
@@ -96,9 +84,7 @@ class DropFileNextcloudTest extends TestCase
         });
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD,
-            $client
+            $client,
         );
 
         $this->nextcloudClient->dropFile($file);
@@ -120,9 +106,7 @@ class DropFileNextcloudTest extends TestCase
         $client = new MockHttpClient(new MockResponse('', ['http_code' => 200]));
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD,
-            $client
+            $client,
         );
 
         $file = new File(new FileName('testfile.txt'));
@@ -137,9 +121,7 @@ class DropFileNextcloudTest extends TestCase
         $client = new MockHttpClient(new MockResponse('', ['http_code' => 400]));
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD,
-            $client
+            $client,
         );
 
         $file = new File(new FileName('noneExistingFile.txt'), new Path('noneExistingDir/'));
@@ -156,9 +138,7 @@ class DropFileNextcloudTest extends TestCase
         $client = new MockHttpClient($mockResponse);
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            self::MAIL_ADDRESS,
-            $this->API_KEY_NEXTCLOUD,
-            $client
+            $client,
         );
 
         $fileContent = $this->nextcloudClient->readFile($file);

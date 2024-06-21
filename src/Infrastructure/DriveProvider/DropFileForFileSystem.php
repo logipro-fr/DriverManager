@@ -5,39 +5,48 @@ namespace DriveManager\Infrastructure\DriveProvider;
 use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\Exceptions\RepositoryDoesNotExistException;
 use DriveManager\Domain\Model\File\File;
-use DriveManager\Domain\Model\File\FileName;
+use DriveManager\Domain\Model\File\Path;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamWrapper;
+use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 
 class DropFileForFileSystem implements DropFileInterface
 {
-    private const PATH_REPOSITORY = '%s/%s';
-    private const FULL_PATH = '%s/%s';
-    public function __construct(private string $rootPath)
+    private vfsStreamDirectory $root;
+
+    public function __construct()
     {
+        $this->root = vfsStream::setup("root");
     }
 
     public function dropFile(File $file): void
     {
-
         $pathToUpload = $file->getPath();
-        $pathDirectory = sprintf(self::PATH_REPOSITORY, $this->rootPath, $pathToUpload);
-        if (!is_dir($pathDirectory)) {
+
+        if (!$this->root->hasChild($pathToUpload)) {
             throw new RepositoryDoesNotExistException("Repository ($pathToUpload) doesn't exist.");
         }
-        $filePath = sprintf(self::FULL_PATH, $pathDirectory, $file->getFileName());
-        file_put_contents($filePath, $file->getContent());
+       //vfsStream::inspect(new vfsStreamPrintVisitor());
+
+        $this->root->addChild(vfsStream::newFile($file->getFileName())->setContent($file->getContent())->at($this->root));
     }
 
     public function isFileExists(File $file): bool
     {
-        return file_exists($this->rootPath . '/' . $file->getFileName());
+        return file_exists($this->root->url() . '/' . $file->getFileName());
     }
 
     public function createDirectory(string $directoryName): void
     {
-        $fullPath = $this->rootPath . '/' . $directoryName;
+        $fullPath = $this->root->url() . '/' . $directoryName;
         if (!is_dir($fullPath)) {
-            mkdir($fullPath, 0777, true);
-            //vfsStream::newDirectory($directoryName, 0777)->at(vfsStream::setup($this->rootPath));
+            vfsStream::newDirectory($directoryName)->at($this->root);
         }
+    }
+
+    public function getRootDirectory(): vfsStreamDirectory
+    {
+        return $this->root;
     }
 }

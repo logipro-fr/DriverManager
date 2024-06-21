@@ -8,6 +8,8 @@ use DriveManager\Domain\Model\File\FileName;
 use DriveManager\Domain\Model\File\FileContent;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Domain\Model\File\Path;
+use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
+use org\bovigo\vfs\vfsStream;
 
 class DropFile
 {
@@ -22,12 +24,12 @@ class DropFile
     public function execute(DropFileRequest $request): void
     {
         $dropFileApi = $this->dropfileProviderfactory->create($request->apiName);
-
-        $fileName = new FileName($request->fileToDeposit);
         $fullPath = $request->filePathToDirectory . $request->fileToDeposit;
         $path = new Path($fullPath);
+        $fileName = new FileName($request->fileToDeposit);
         $fileContent = new FileContent($request->fileContent);
         $file = new File($fileName, $path, $fileContent);
+
         $this->repository->add($file);
         $dropFileApi->dropFile($file);
 

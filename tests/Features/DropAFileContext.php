@@ -32,7 +32,7 @@ class DropAFileContext implements Context
     {
         throw new PendingException();
     }
-    
+
     /**
      * @Given the drive is NextCloudMock
      */
