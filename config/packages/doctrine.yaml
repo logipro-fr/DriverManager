@@ -3,7 +3,6 @@ doctrine:
     url: "%env(resolve:DATABASE_URL)%"
     types:
       file_id: DriveManager\Infrastructure\Persistence\Doctrine\Types\FileIdType
-      file_content: DriveManager\Infrastructure\Persistence\Doctrine\Types\FileContentType
       file_name: DriveManager\Infrastructure\Persistence\Doctrine\Types\FileNameType
       path: DriveManager\Infrastructure\Persistence\Doctrine\Types\PathType 
   orm:

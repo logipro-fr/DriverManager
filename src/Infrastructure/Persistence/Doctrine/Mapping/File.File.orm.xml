@@ -14,6 +14,5 @@
         <field name="date" type="datetime_immutable" column="date"/>
         <field name="fileName" type="file_name" column="file_name"/>
         <field name="path" type="path" column="path"/>
-        <field name="content" type="file_content" column="content"/>
     </entity>
 </doctrine-mapping>
