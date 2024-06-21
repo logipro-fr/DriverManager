@@ -28,7 +28,7 @@ paths:
                 filePathToDirectory:
                   type: string
                   description: Path to the directory where the file will be deposited
-                  example: /Test/testFile.txt
+                  example: Test/
                 fileDate:
                   type: string
                   description: Date of the file
