@@ -26,4 +26,14 @@ class FileContentTypeTest extends TestCase
         $phpValue = $type->convertToPHPValue($dbValue, new SqlitePlatform());
         $this->assertEquals($fileContent, $phpValue);
     }
+
+    public function testGetSQLDeclaration(): void
+    {
+        $type = new FileContentType();
+        $platform = new SqlitePlatform();
+        $column = ['name' => 'file_content_column'];
+
+        $sqlDeclaration = $type->getSQLDeclaration($column, $platform);
+        $this->assertEquals($platform->getGuidTypeDeclarationSQL($column), $sqlDeclaration);
+    }
 }
