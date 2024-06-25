@@ -55,4 +55,18 @@ class CurrentWorkDirPathTest extends TestCase
         $path = CurrentWorkDirPath::getPath();
         $this->assertEquals(self::MY_CURRENT_WORKING_DIR, $path);
     }
+
+    public function testGetFullPathWithCwd(): void
+    {
+        unset($_ENV['PWD']);
+        $this->assertFalse(isset($_ENV['PWD']));
+        putenv('PWD');
+        $this->assertFalse(getenv('PWD'));
+
+        $expectedPath = getcwd();
+        $this->assertNotFalse($expectedPath);
+
+        $path = CurrentWorkDirPath::getPath();
+        $this->assertEquals($expectedPath, $path);
+    }
 }
