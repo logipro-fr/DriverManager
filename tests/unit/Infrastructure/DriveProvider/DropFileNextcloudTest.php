@@ -34,7 +34,6 @@ class DropFileNextcloudTest extends TestCase
     {
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
-            //apiKey : "FakeCredentials"
         );
     }
 

@@ -5,10 +5,8 @@ namespace DriveManager\Infrastructure\DriveProvider;
 use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\Exceptions\RepositoryDoesNotExistException;
 use DriveManager\Domain\Model\File\File;
-use DriveManager\Domain\Model\File\Path;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 
 class DropFileForFileSystem implements DropFileInterface
@@ -23,13 +21,12 @@ class DropFileForFileSystem implements DropFileInterface
     public function dropFile(File $file): void
     {
         $pathToUpload = $file->getPath();
-
         if (!$this->root->hasChild($pathToUpload)) {
             throw new RepositoryDoesNotExistException("Repository ($pathToUpload) doesn't exist.");
         }
-       //vfsStream::inspect(new vfsStreamPrintVisitor());
-
-        $this->root->addChild(vfsStream::newFile($file->getFileName())->setContent($file->getContent())->at($this->root));
+        $this->root->addChild(vfsStream::newFile($file->getFileName())
+                    ->setContent($file->getContent())
+                    ->at($this->root));
     }
 
     public function isFileExists(File $file): bool

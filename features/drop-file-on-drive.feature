@@ -1,5 +1,9 @@
 Feature: Drop a file
-    
+
+    Background: Set up the drive and API keys
+        Given I have set up the credentials
+
+    @dropFile
     Scenario Outline: Drop a file in a specific directory
         Given the drive is <drive>
         And the directory <directory> exists <doesExist>
@@ -9,8 +13,8 @@ Feature: Drop a file
         And the file has create and updated dates
         And the file knows its fullname path 
 
-        Examples:
-            |     drive     |        directory     | doesExist |
-            | NextCloudMock | "/Rapports"          |   "yes"   |
-            |  FileSysteme  | "/NextSign"          |    "no"   |
-            | NextCloudMock | "/NextSign/archived" |    "no"   |
+    Examples:
+        |       drive     |       directory     | doesExist |
+        | "NextCloudMock" | "Rapports"          |   "yes"   |
+        |  "FileSystem"   | "NextSign"          |    "no"   |
+        | "NextCloudMock" | "NextSign/archived" |    "no"   |

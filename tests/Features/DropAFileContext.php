@@ -3,17 +3,17 @@
 namespace Features;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use DriveManager\Application\Service\DropFile\DropFile;
 use DriveManager\Application\Service\DropFile\DropFileRequest;
 use DriveManager\Application\Service\DropFile\DropFileResponse;
-use DriveManager\Infrastructure\Api\V1\DropFileController;
-use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
-use DriveManager\Infrastructure\Persistence\FileRepositoryInMemory;
+use DriveManager\Infrastructure\DropFileProviderFactory;
+use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
+use Behat\Behat\Tester\Exception\PendingException;
 use PHPUnit\Framework\Assert;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * Defines application features from the specific context.
@@ -22,23 +22,24 @@ class DropAFileContext implements Context
 {
     private vfsStreamDirectory $vfs;
     private DropFileResponse $response;
+    private string $driverName;
     private string $fullPathName;
 
-
     /**
-     * @Given the drive is FileSysteme
+     * @Given I have set up the credentials
      */
-    public function theDriveIsFilesysteme()
+    public function iHaveSetUpTheCredentials(): void
     {
-        throw new PendingException();
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(getcwd() . '/src/Infrastructure/Shared/Symfony/.env');
     }
 
     /**
-     * @Given the drive is NextCloudMock
+     * @Given the drive is :driver
      */
-    public function theDriveIsNextcloudmock(): void
+    public function theDriveIs(string $driver): void
     {
-        throw new PendingException();
+        $this->driverName = $driver;
     }
 
     /**
@@ -57,26 +58,23 @@ class DropAFileContext implements Context
      */
     public function iDepositAFileInTheDirectory(string $fileToDeposit, string $directoryName): void
     {
-        $this->fullPathName = "$directoryName"; //   /$fileToDeposit
         $currentDate = new \DateTimeImmutable();
-
-        // ds fct controller
         $request = new DropFileRequest(
             "unIdDeTest",
-            $fileToDeposit,
-            $directoryName,
+            "$fileToDeposit",
+            "$directoryName/",
             $currentDate->format('Y-m-d H:i:s'),
             "some content",
-            "NextCloudMock"
+            "$this->driverName"
         );
+        $dropFileProviderFactory = new DropFileProviderFactory("baseUriForProvider");
+
         $repository = new FileRepositoryInMemory();
-        $dropFileService = new DropFileForFileSystem($this->vfs->url());
-        $dropFileService->createDirectory($directoryName);
-        $service = new DropFile($dropFileService, $this->repository);
+        $service = new DropFile($dropFileProviderFactory, $repository);
+
         $service->execute($request);
         $this->response = $service->getResponse();
-        $controllerDropFile = new DropFileController($dropFileService, $this->repository);
-        $this->response = $controllerDropFile->dropFile($request);
+        $this->fullPathName = $this->response->createdPath;
     }
 
     /**
@@ -84,10 +82,7 @@ class DropAFileContext implements Context
      */
     public function theFileShouldBeListedInTheDirectory(string $fileToDeposit, string $directoryName): void
     {
-        // $path = $this->response->createdFilePath;
-        // $fullPath = vfsStream::url("root/$path");
-        $fullPath = vfsStream::url("root/$directoryName/$fileToDeposit");
-        Assert::assertTrue(file_exists($fullPath));
+        Assert::assertEquals("$directoryName/$fileToDeposit", $this->response->createdPath);
     }
 
     /**
@@ -97,6 +92,7 @@ class DropAFileContext implements Context
     {
         Assert::assertNotEmpty($this->response->createdFileId);
         Assert::assertNotNull($this->response->createdFileId);
+        Assert::assertStringStartsWith('fil_', $this->response->createdFileId);
     }
 
     /**

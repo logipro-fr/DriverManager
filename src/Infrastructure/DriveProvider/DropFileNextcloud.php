@@ -5,8 +5,6 @@ namespace DriveManager\Infrastructure\DriveProvider;
 use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\Exceptions\FailUploadingFileException;
 use DriveManager\Domain\Model\File\File;
-use DriveManager\Domain\Model\File\FileName;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DropFileNextcloud implements DropFileInterface
@@ -18,7 +16,7 @@ class DropFileNextcloud implements DropFileInterface
         string $baseUri,
         ?HttpClientInterface $client = null,
     ) {
-        list($mailAddress,$password) = explode(" ", $_ENV["NEXTCLOUD_CREDENTIALS"]) ;
+        list($mailAddress,$password) = explode(" ", $_ENV["NEXTCLOUD_CREDENTIALS"]);
 
         if ($client == null) {
             $this->client = (new HttpClientFactory())->create($baseUri, $mailAddress, $password);

@@ -3,19 +3,13 @@
 namespace DriveManager\Tests\Integration\Infrastructure\Api\V1;
 
 use DoctrineTestingTools\DoctrineRepositoryTesterTrait;
-use DriveManager\Domain\Model\File\File;
-use DriveManager\Domain\Model\File\FileId;
-use DriveManager\Domain\Model\File\FileRepositoryInterface;
-use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
-use DriveManager\Tests\WebBaseTestCase;
-use org\bovigo\vfs\vfsStream;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Dotenv\Dotenv;
 
 use function Safe\json_encode;
 
-class DropFileControllerTest extends WebBaseTestCase
+class DropFileControllerTest extends WebTestCase
 {
     use DoctrineRepositoryTesterTrait;
 

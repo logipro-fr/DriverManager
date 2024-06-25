@@ -12,9 +12,9 @@ use DriveManager\Domain\Model\File\FileName;
 use DriveManager\Domain\Model\File\Path;
 use DriveManager\Infrastructure\DropFileProviderFactory;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
-use DriveManager\Tests\BaseTestCase;
+use PHPUnit\Framework\TestCase;
 
-class DropFileTest extends BaseTestCase
+class DropFileTest extends TestCase
 {
     private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
 
@@ -63,6 +63,27 @@ class DropFileTest extends BaseTestCase
         $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $response->createdPath);
         $this->assertEquals("contrat-signed.pdf", $response->createdFileToDeposit);
         $this->assertEquals($currentDate->format('Y-m-d H:i:s'), $response->createdDate);
+    }
+
+    public function testDepositASimpleFileWithFileSystem(): void
+    {
+        $factory = new DropFileProviderFactory(self::BASE_URI);
+        $repository = new FileRepositoryInMemory();
+        $service = new DropFile($factory, $repository);
+        $request = new DropFileRequest("", "hello.txt", "Test/", "", "hello", "FileSystem");
+        $currentDate = new DateTimeImmutable();
+
+        // Act / When
+        $service->execute($request);
+        $response = $service->getResponse();
+        $expectedId = $response->createdFileId;
+        $actualId = $repository->findById(new FileId($response->createdFileId))->getId();
+
+        // Assert / Then
+        $this->assertEquals("hello.txt", $response->createdFileToDeposit);
+        $this->assertEquals("Test/hello.txt", $response->createdPath);
+        $this->assertEquals($currentDate->format('Y-m-d H:i:s'), $response->createdDate);
+        $this->assertEquals($expectedId, $actualId);
     }
 
     public function testCountFilesDeposit(): void

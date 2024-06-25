@@ -61,7 +61,7 @@ class DropFileProviderFactoryTest extends TestCase
     {
         // Arrange / Given
         $factory = new DropFileProviderFactory(self::BASE_URI);
-        $provider = $factory->create('FileSysteme');
+        $provider = $factory->create('FileSystem');
 
         // Assert / Then
         $this->assertInstanceOf(DropFileForFileSystem::class, $provider);

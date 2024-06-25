@@ -9,6 +9,8 @@ use DriveManager\Domain\Model\File\FileContent;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Domain\Model\File\Path;
 use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
+use DriveManager\Infrastructure\DriveProvider\DropFileNextcloud;
+use DriveManager\Infrastructure\DropFileProviderFactory;
 use org\bovigo\vfs\vfsStream;
 
 class DropFile
@@ -16,19 +18,27 @@ class DropFile
     private DropFileResponse $dropFileResponse;
 
     public function __construct(
-        private ProviderAbstractFactory $dropfileProviderfactory,
+        private ProviderAbstractFactory $dropFileProviderFactory,
         private FileRepositoryInterface $repository
     ) {
     }
 
     public function execute(DropFileRequest $request): void
     {
-        $dropFileApi = $this->dropfileProviderfactory->create($request->apiName);
         $fullPath = $request->filePathToDirectory . $request->fileToDeposit;
         $path = new Path($fullPath);
         $fileName = new FileName($request->fileToDeposit);
         $fileContent = new FileContent($request->fileContent);
         $file = new File($fileName, $path, $fileContent);
+
+        if ($request->apiName == "FileSystem") {
+            /** @var DropFileForFileSystem $dropFileApi */
+            $dropFileApi = $this->dropFileProviderFactory->create($request->apiName);
+            $dropFileApi->createDirectory("$request->filePathToDirectory/$request->fileToDeposit");
+        } else {
+            /** @var DropFileNextcloud $dropFileApi */
+            $dropFileApi = $this->dropFileProviderFactory->create($request->apiName);
+        }
 
         $this->repository->add($file);
         $dropFileApi->dropFile($file);

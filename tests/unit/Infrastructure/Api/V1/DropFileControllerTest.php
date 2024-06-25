@@ -7,15 +7,15 @@ use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\Api\V1\DropFileController;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
-use DriveManager\Tests\WebBaseTestCase;
 use org\bovigo\vfs\vfsStream;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 use function Safe\json_encode;
 
-class DropFileControllerTest extends WebBaseTestCase
+class DropFileControllerTest extends WebTestCase
 {
     use DoctrineRepositoryTesterTrait;
 

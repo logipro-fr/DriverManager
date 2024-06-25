@@ -10,7 +10,6 @@ use DriveManager\Domain\Model\File\FileName;
 use DriveManager\Domain\Model\File\Path;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 
 use function Safe\fileperms;
@@ -21,13 +20,11 @@ class DropFileForFileSystemTest extends TestCase
     {
         $dropFile = new DropFileForFileSystem();
         $file = new File(new FileName('myHello.txt'), new Path("testingRepo"), new FileContent('Hello, World!'));
+
         $dropFile->createDirectory("testingRepo");
         $dropFile->dropFile($file);
-        //$dropFile->getRootDirectory()->addChild(vfsStream::newFile('myHello.txt'));
 
-        //var_dump($this->root);
         $this->assertTrue($dropFile->getRootDirectory()->hasChild('myHello.txt'));
-        //$this->assertTrue($dropFile->isFileExists($file));
         $this->assertEquals("Hello, World!", $file->getContent());
     }
 
