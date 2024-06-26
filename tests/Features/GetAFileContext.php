@@ -8,12 +8,8 @@ use DriveManager\Application\Service\DropFile\DropFile;
 use DriveManager\Application\Service\DropFile\DropFileRequest;
 use DriveManager\Application\Service\DropFile\DropFileResponse;
 use DriveManager\Domain\Model\File\FileId;
-use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
 use DriveManager\Infrastructure\DropFileProviderFactory;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use PHPUnit\Framework\Assert;
 
 /**
@@ -35,7 +31,6 @@ class GetAFileContext implements Context
             "unIdDeTest",
             "hello.txt",
             "chemin/de/test/",
-            //$currentDate->format('Y-m-d H:i:s'),
             "some content",
             "FileSystem"
         );

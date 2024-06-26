@@ -18,7 +18,7 @@ abstract class FileRepositoryTestBase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->init(); // Assurez-vous que cette méthode est implémentée dans les classes dérivées
+        $this->init();
     }
 
     abstract protected function init(): void;

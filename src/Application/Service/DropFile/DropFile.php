@@ -10,7 +10,6 @@ use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Domain\Model\File\Path;
 use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
 use DriveManager\Infrastructure\DriveProvider\DropFileNextcloud;
-use org\bovigo\vfs\vfsStream;
 
 class DropFile
 {

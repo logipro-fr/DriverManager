@@ -39,6 +39,6 @@ class File
 
     public function getPath(): string
     {
-        return $this->path; //->getPath().$this->fileName
+        return $this->path;
     }
 }

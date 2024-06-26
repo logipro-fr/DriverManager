@@ -9,10 +9,7 @@ use DriveManager\Infrastructure\DropFileProviderFactory;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
 use DriveManager\Infrastructure\DriveProvider\DropFileNextcloud;
-use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
-use Symfony\Component\HttpClient\Response\MockResponse;
 
 class DropFileProviderFactoryTest extends TestCase
 {

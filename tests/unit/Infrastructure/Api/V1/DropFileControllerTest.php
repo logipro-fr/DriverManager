@@ -5,13 +5,11 @@ namespace DriveManager\Tests\Infrastructure\Api\V1;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use DoctrineTestingTools\DoctrineRepositoryTesterTrait;
-use DriveManager\Domain\Model\File\File;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\Api\V1\DropFileController;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use org\bovigo\vfs\vfsStream;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,8 +20,6 @@ class DropFileControllerTest extends WebTestCase
 {
     use DoctrineRepositoryTesterTrait;
 
-    // private string $API_KEY;
-    // private string $MAIL_ADDRESS;
     private FileRepositoryInterface $repository;
     private KernelBrowser $client;
 
@@ -114,8 +110,6 @@ class DropFileControllerTest extends WebTestCase
 
     public function testDropFileController(): void
     {
-        $vfs = vfsStream::setup('root');
-        //$dropFile = new DropFileForFileSystem($vfs->url());
         $this->repository = new FileRepositoryInMemory();
         $controller = new DropFileController($this->repository, $this->getEntityManager());
 

@@ -2,7 +2,6 @@
 
 namespace DriveManager\Tests\Infrastructure\File\Persistence\File;
 
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use DoctrineTestingTools\DoctrineRepositoryTesterTrait;

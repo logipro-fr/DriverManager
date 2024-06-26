@@ -2,8 +2,6 @@
 
 namespace DriveManager\Tests\Infrastructure\DriveProvider;
 
-//require 'vendor/autoload.php';
-
 use DriveManager\Infrastructure\DriveProvider\DropFileNextcloud;
 use DriveManager\Application\Service\DropFile\Exceptions\FailUploadingFileException;
 use DriveManager\Domain\Model\File\File;
@@ -13,12 +11,6 @@ use DriveManager\Domain\Model\File\Path;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpClient\MockHttpClient;
-
-// use Dotenv\Dotenv;
-
-// // Définis le chemin correct vers ton fichier .env.local
-// $dotenv = Dotenv::createImmutable(getcwd().'src/Infrastructure/Shared/Symfony/.env.local');
-// $dotenv->load();
 
 class DropFileNextcloudTest extends TestCase
 {
@@ -56,14 +48,11 @@ class DropFileNextcloudTest extends TestCase
     {
         $path = new Path(self::UPLOAD_FILE_PATH . "hello.txt");
         $file = new File(new FileName('hello.txt'), $path, new FileContent("Hello"));
-
-        // Two mock responses: one for the PUT request and one for the HEAD request.
         $responses = [
             new MockResponse('', ['http_code' => 200]),  // Response for the PUT request
             new MockResponse('', ['http_code' => 200]),  // Response for the HEAD request
         ];
         $client = new MockHttpClient($responses);
-
         $this->nextcloudClient = new DropFileNextcloud(
             self::BASE_URI,
             $client,

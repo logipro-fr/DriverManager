@@ -4,14 +4,10 @@ namespace DriveManager\Infrastructure\Api\V1;
 
 use Doctrine\ORM\EntityManagerInterface;
 use DriveManager\Application\Service\DropFile\DropFile;
-use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\DropFileRequest;
-use DriveManager\Domain\Model\File\FileId;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\DropFileProviderFactory;
-use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use Exception;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,7 +80,6 @@ class DropFileController
             $fileId,
             $fileToDeposit,
             $filePathToDirectory,
-            //$fileDate,
             $fileContent,
             $driver
         );

@@ -2,14 +2,12 @@
 
 namespace DriveManager\Tests\Infrastructure\Shared;
 
-use DriveManager\Infrastructure\Exception\NoPWDException;
 use DriveManager\Infrastructure\Shared\CurrentWorkDirPath;
 use PHPUnit\Framework\TestCase;
 
 class CurrentWorkDirPathTest extends TestCase
 {
     private const MY_CURRENT_WORKING_DIR = '/home/myfolder';
-
     private ?string $d_env;
     private ?string $env;
 

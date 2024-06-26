@@ -20,6 +20,7 @@ class DropFileTest extends TestCase
 
     public function testDepositASimpleFile(): void
     {
+        // Arrange / Given
         $factory = new DropFileProviderFactory(self::BASE_URI);
         $repository = new FileRepositoryInMemory();
         $service = new DropFile($factory, $repository);
@@ -41,7 +42,6 @@ class DropFileTest extends TestCase
 
     public function testDepositAFileWithComplexPath(): void
     {
-        // Arrange / Given
         $factory = new DropFileProviderFactory(self::BASE_URI);
         $repository = new FileRepositoryInMemory();
         $service = new DropFile($factory, $repository);
@@ -54,11 +54,9 @@ class DropFileTest extends TestCase
             "NextCloudMock"
         );
 
-        // Act / When
         $service->execute($request);
         $response = $service->getResponse();
 
-        // Assert / Then
         $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $response->createdPath);
         $this->assertEquals("contrat-signed.pdf", $response->createdFileToDeposit);
         $this->assertEquals($currentDate->format('Y-m-d H:i:s'), $response->createdDate);
@@ -72,13 +70,11 @@ class DropFileTest extends TestCase
         $request = new DropFileRequest("", "hello.txt", "Test/", "hello", "FileSystem");
         $currentDate = new DateTimeImmutable();
 
-        // Act / When
         $service->execute($request);
         $response = $service->getResponse();
         $expectedId = $response->createdFileId;
         $actualId = $repository->findById(new FileId($response->createdFileId))->getId();
 
-        // Assert / Then
         $this->assertEquals("hello.txt", $response->createdFileToDeposit);
         $this->assertEquals("Test/hello.txt", $response->createdPath);
         $this->assertEquals($currentDate->format('Y-m-d H:i:s'), $response->createdDate);
@@ -87,15 +83,12 @@ class DropFileTest extends TestCase
 
     public function testCountFilesDeposit(): void
     {
-        // Arrange / Given
         $apiVfs = new DropFileApiVfs();
         $file = new File(new FileName("test"), new Path(), new FileContent("some content"));
 
-        // Act / When
         $apiVfs->dropFile($file);
         $apiVfs->dropFile($file);
 
-        // Assert / Then
         $this->assertEquals(2, $apiVfs->count);
     }
 }

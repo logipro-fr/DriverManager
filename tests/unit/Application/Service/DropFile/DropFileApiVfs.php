@@ -5,7 +5,6 @@ namespace DriveManager\Tests\Application\Service\DropFile;
 use DriveManager\Application\Service\DropFile\DropFileInterface;
 use DriveManager\Application\Service\DropFile\Exceptions\RepositoryDoesNotExistException;
 use DriveManager\Domain\Model\File\File;
-use DriveManager\Domain\Model\File\FileName;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 

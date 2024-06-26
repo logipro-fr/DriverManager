@@ -48,7 +48,6 @@ class DropFileForFileSystemTest extends TestCase
         $dropFile->dropFile($file);
     }
 
-
     public function testCreateDirectory(): void
     {
         $dropFile = new DropFileForFileSystem();

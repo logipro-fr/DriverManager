@@ -10,8 +10,6 @@ use DriveManager\Infrastructure\DropFileProviderFactory;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
-use Behat\Behat\Tester\Exception\PendingException;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -63,8 +61,6 @@ class DropAFileContext implements Context
             "unIdDeTest",
             "$fileToDeposit",
             "$directoryName/",
-            //$currentDate->format('Y-m-d H:i:s'),
-            // voir pour l enlever
             "some content",
             "$this->driverName"
         );
