@@ -9,7 +9,6 @@ use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\Api\V1\DropFileController;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
-use org\bovigo\vfs\vfsStream;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
