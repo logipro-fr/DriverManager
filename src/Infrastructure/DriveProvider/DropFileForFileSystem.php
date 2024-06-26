@@ -11,6 +11,7 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 
 class DropFileForFileSystem implements DropFileInterface
 {
+    private const FIND_FILE_OR_DIRECTORY = "%s%s%s";
     private vfsStreamDirectory $root;
 
     public function __construct()
@@ -31,12 +32,12 @@ class DropFileForFileSystem implements DropFileInterface
 
     public function isFileExists(File $file): bool
     {
-        return file_exists($this->root->url() . '/' . $file->getFileName());
+        return file_exists(sprintf(self::FIND_FILE_OR_DIRECTORY, $this->root->url(), '/', $file->getFileName()));
     }
 
     public function createDirectory(string $directoryName): void
     {
-        $fullPath = $this->root->url() . '/' . $directoryName;
+        $fullPath = sprintf(self::FIND_FILE_OR_DIRECTORY, $this->root->url(), '/', $directoryName);
         if (!is_dir($fullPath)) {
             vfsStream::newDirectory($directoryName)->at($this->root);
         }

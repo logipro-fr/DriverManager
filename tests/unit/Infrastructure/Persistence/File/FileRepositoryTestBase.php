@@ -42,6 +42,7 @@ abstract class FileRepositoryTestBase extends TestCase
     {
         $this->expectException(FileNotFoundException::class);
         $this->expectExceptionMessage("Error can't find the fileId");
+        $this->expectExceptionCode(400);
         $this->fileRepository->findById(new FileId("unknowId"));
     }
 }

@@ -2,8 +2,8 @@
 
 namespace DriveManager\Tests\Infrastructure\Shared\Symfony;
 
-use DriveManager\Infrastructure\Shared\Symfony\Kernel;
 use PHPUnit\Framework\TestCase;
+use DriveManager\Infrastructure\Shared\Symfony\Kernel;
 
 class KernelTest extends TestCase
 {

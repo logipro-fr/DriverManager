@@ -33,7 +33,7 @@ class DropFileProviderFactory extends ProviderAbstractFactory
     private function createMock(): MockHttpClient
     {
         $responses = [
-            new MockResponse('', ['http_code' => 200])
+            new MockResponse()//'', ['http_code' => 200]
         ];
         return new MockHttpClient($responses);
     }

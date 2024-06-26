@@ -2,7 +2,10 @@
 
 namespace DriveManager\Tests\Infrastructure\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use DoctrineTestingTools\DoctrineRepositoryTesterTrait;
+use DriveManager\Domain\Model\File\File;
 use DriveManager\Domain\Model\File\FileRepositoryInterface;
 use DriveManager\Infrastructure\Api\V1\DropFileController;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryDoctrine;
@@ -140,5 +143,48 @@ class DropFileControllerTest extends WebTestCase
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertStringContainsString('"data":{"fileId":', $responseContent);
         $this->assertStringContainsString('"message":"', $responseContent);
+    }
+
+    public function testExecute(): void
+    {
+
+        $metadata = $this->createMock(ClassMetadata::class);
+        $metadata->name = DropFileControllerTest::class;
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->expects($this->once())
+            ->method('flush');
+
+        $entityManager
+            ->method('getClassMetadata')
+            ->willReturn($metadata);
+
+        $controller = new DropFileController(
+            new FileRepositoryDoctrine($entityManager),
+            $entityManager
+        );
+
+        $request = Request::create(
+            "/api/v1/dropFile/dropFile",
+            "POST",
+            [],
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                "fileId" => "",
+                "fileToDeposit" => "testfile.txt",
+                "filePathToDirectory" => "",
+                "fileDate" => "",
+                "fileContent" => "",
+                "driver" => "NextCloudMock",
+            ]),
+        );
+
+        $response = $controller->dropFile($request);
+        /** @var string */
+        $responseContent = $response->getContent();
+        $this->assertJson($responseContent);
     }
 }

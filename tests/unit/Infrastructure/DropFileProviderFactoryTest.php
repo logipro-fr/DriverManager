@@ -9,11 +9,9 @@ use DriveManager\Infrastructure\DropFileProviderFactory;
 use DriveManager\Infrastructure\Persistence\File\FileRepositoryInMemory;
 use DriveManager\Infrastructure\DriveProvider\DropFileForFileSystem;
 use DriveManager\Infrastructure\DriveProvider\DropFileNextcloud;
-use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
-use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
 class DropFileProviderFactoryTest extends TestCase
@@ -46,24 +44,21 @@ class DropFileProviderFactoryTest extends TestCase
         $this->assertEquals("nextsign/contrat/contrat-signed.pdf", $response->createdPath);
         $this->assertEquals("contrat-signed.pdf", $response->createdFileToDeposit);
         $this->assertEquals($currentDate->format('Y-m-d H:i:s'), $response->createdDate);
+        //$this->assertEquals(200,$request-> ); //$response->getStatusCode()
     }
 
     public function testProviderNextcloud(): void
     {
-        // Arrange / Given
         $factory = new DropFileProviderFactory(self::BASE_URI);
 
-        // Assert / Then
         $this->assertInstanceOf(DropFileNextcloud::class, $factory->create('NextCloud'));
     }
 
     public function testProviderFileSysteme(): void
     {
-        // Arrange / Given
         $factory = new DropFileProviderFactory(self::BASE_URI);
         $provider = $factory->create('FileSystem');
 
-        // Assert / Then
         $this->assertInstanceOf(DropFileForFileSystem::class, $provider);
     }
 }
