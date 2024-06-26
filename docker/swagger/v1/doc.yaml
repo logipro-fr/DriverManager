@@ -40,7 +40,7 @@ paths:
                 driver:
                   type: string
                   description: Name of the driver to handle the file deposit
-                  example: FileSysteme
+                  example: NextCloudMock
       responses:
         '201':
           description: File successfully deposited
