@@ -24,7 +24,7 @@ paths:
                 fileToDeposit:
                   type: string
                   description: Name of the file to be deposited
-                  example: testfile.txt
+                  example: ATestingFile.txt
                 filePathToDirectory:
                   type: string
                   description: Path to the directory where the file will be deposited
@@ -73,7 +73,7 @@ paths:
                         example: testfile.txt
                       filePathToDirectory:
                         type: string
-                        example: /Rapports
+                        example: Test/
                       fileDate:
                         type: string
                         example: 2024-06-06 07:41:39.417432
@@ -83,55 +83,3 @@ paths:
                       driver:
                         type: string
                         example: FileSysteme
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    description: Indicates whether the file deposit was successful
-                    example: false
-                  errorCode:
-                    type: string
-                    description: Name of the exception class if any error occurs
-                    example: InvalidRequestException
-                  message:
-                    type: string
-                    description: Message associated with the response
-                    example: Invalid request
-                  data:
-                    type: object
-                    description: Data related to the error
-                    properties:
-                      fileId:
-                        type: string
-                        example: UnIdDeTest
-                      fileToDeposit:
-                        type: string
-                        example: testfile.txt
-                      filePathToDirectory:
-                        type: string
-                        example: ""
-                      fileDate:
-                        type: string
-                        example: ""
-                      fileContent:
-                        type: string
-                        example: ""
-                      driver:
-                        type: string
-                        example: badApiName
-                    example:
-                      success: false
-                      errorCode: BadApiNameException
-                      message: A wrong api name is enter in parameter of function create
-                      data:
-                        fileId: UnIdDeTest
-                        fileToDeposit: testfile.txt
-                        filePathToDirectory: ""
-                        fileDate: ""
-                        fileContent: ""
-                        driver: badApiName
