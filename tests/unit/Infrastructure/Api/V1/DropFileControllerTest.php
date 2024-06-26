@@ -47,7 +47,6 @@ class DropFileControllerTest extends WebTestCase
                 "fileId" => "UnIdDeTest",
                 "fileToDeposit" => "testfile.txt",
                 "filePathToDirectory" => "",
-                "fileDate" => "",
                 "fileContent" => "",
                 "driver" => "badApiName",
             ])
@@ -77,7 +76,6 @@ class DropFileControllerTest extends WebTestCase
                 "fileId" => "UnIdDeTest",
                 "fileToDeposit" => "testfile.txt",
                 "filePathToDirectory" => "",
-                "fileDate" => "",
                 "fileContent" => "",
                 "driver" => "NextCloudMock",
             ])
@@ -124,7 +122,6 @@ class DropFileControllerTest extends WebTestCase
                 "fileId" => "",
                 "fileToDeposit" => "testfile.txt",
                 "filePathToDirectory" => "",
-                "fileDate" => "",
                 "fileContent" => "",
                 "driver" => "NextCloudMock",
             ]),
@@ -170,7 +167,6 @@ class DropFileControllerTest extends WebTestCase
                 "fileId" => "",
                 "fileToDeposit" => "testfile.txt",
                 "filePathToDirectory" => "",
-                "fileDate" => "",
                 "fileContent" => "",
                 "driver" => "NextCloudMock",
             ]),

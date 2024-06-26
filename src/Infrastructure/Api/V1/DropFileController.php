@@ -70,8 +70,6 @@ class DropFileController
         /** @var string */
         $filePathToDirectory = $data['filePathToDirectory'];
         /** @var string */
-        $fileDate = $data['fileDate'];
-        /** @var string */
         $fileContent = $data['fileContent'];
         /** @var string */
         $driver = $data['driver'];
