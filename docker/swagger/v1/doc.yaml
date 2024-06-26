@@ -40,7 +40,7 @@ paths:
                 driver:
                   type: string
                   description: Name of the driver to handle the file deposit
-                  example: NextCloud
+                  example: FileSysteme
       responses:
         '201':
           description: File successfully deposited
@@ -82,4 +82,56 @@ paths:
                         example: This is a test file content
                       driver:
                         type: string
-                        example: FileSysteme
+                        example: NextCloud
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates whether the file deposit was successful
+                    example: false
+                  errorCode:
+                    type: string
+                    description: Name of the exception class if any error occurs
+                    example: InvalidRequestException
+                  message:
+                    type: string
+                    description: Message associated with the response
+                    example: Invalid request
+                  data:
+                    type: object
+                    description: Data related to the error
+                    properties:
+                      fileId:
+                        type: string
+                        example: UnIdDeTest
+                      fileToDeposit:
+                        type: string
+                        example: testfile.txt
+                      filePathToDirectory:
+                        type: string
+                        example: ""
+                      fileDate:
+                        type: string
+                        example: ""
+                      fileContent:
+                        type: string
+                        example: ""
+                      driver:
+                        type: string
+                        example: badApiName
+                    example:
+                      success: false
+                      errorCode: BadApiNameException
+                      message: A wrong api name is enter in parameter of function create
+                      data:
+                        fileId: UnIdDeTest
+                        fileToDeposit: testfile.txt
+                        filePathToDirectory: ""
+                        fileDate: ""
+                        fileContent: ""
+                        driver: badApiName
