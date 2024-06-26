@@ -35,7 +35,7 @@ class GetAFileContext implements Context
             "unIdDeTest",
             "hello.txt",
             "chemin/de/test/",
-            $currentDate->format('Y-m-d H:i:s'),
+            //$currentDate->format('Y-m-d H:i:s'),
             "some content",
             "FileSystem"
         );

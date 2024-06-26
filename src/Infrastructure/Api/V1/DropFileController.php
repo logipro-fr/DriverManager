@@ -84,7 +84,7 @@ class DropFileController
             $fileId,
             $fileToDeposit,
             $filePathToDirectory,
-            $fileDate,
+            //$fileDate,
             $fileContent,
             $driver
         );

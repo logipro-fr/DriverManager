@@ -29,7 +29,6 @@ class DropFileProviderFactoryTest extends TestCase
             "",
             "contrat-signed.pdf",
             "nextsign/contrat/",
-            "",
             "contenu du pdf",
             "NextCloudMock"
         );

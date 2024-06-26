@@ -23,7 +23,7 @@ class DropFileTest extends TestCase
         $factory = new DropFileProviderFactory(self::BASE_URI);
         $repository = new FileRepositoryInMemory();
         $service = new DropFile($factory, $repository);
-        $request = new DropFileRequest("", "hello.txt", "Test/", "", "hello", "NextCloudMock");
+        $request = new DropFileRequest("", "hello.txt", "Test/", "hello", "NextCloudMock");
         $currentDate = new DateTimeImmutable();
 
         // Act / When
@@ -50,7 +50,6 @@ class DropFileTest extends TestCase
             "",
             "contrat-signed.pdf",
             "nextsign/contrat/",
-            "",
             "contenu du pdf",
             "NextCloudMock"
         );
@@ -70,7 +69,7 @@ class DropFileTest extends TestCase
         $factory = new DropFileProviderFactory(self::BASE_URI);
         $repository = new FileRepositoryInMemory();
         $service = new DropFile($factory, $repository);
-        $request = new DropFileRequest("", "hello.txt", "Test/", "", "hello", "FileSystem");
+        $request = new DropFileRequest("", "hello.txt", "Test/", "hello", "FileSystem");
         $currentDate = new DateTimeImmutable();
 
         // Act / When
