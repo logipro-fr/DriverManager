@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class DropFileTest extends TestCase
 {
-    private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
+    private const BASE_URI = 'https://url/to/tests';
 
     public function testDepositASimpleFile(): void
     {

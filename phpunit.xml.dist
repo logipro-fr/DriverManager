@@ -19,6 +19,7 @@
     <env name="APP_DEBUG" value="0"/>
     <env name="SYMFONY_DOTENV_PATH" value="DriveManager\tests\unit\.env.test"/>
     <env name="NEXTCLOUD_CREDENTIALS" value="mailAddress password"/>
+    <env name="NEXTCLOUD_SERVER" value='https://UrlToDropAFileOnNextcloud'/>
   </php>
   <source>
     <include>

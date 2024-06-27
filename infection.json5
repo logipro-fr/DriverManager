@@ -18,5 +18,5 @@
     "mutators": {
         "@default": true
     },
-    "timeout": 20
+    "timeout": 10
 }   

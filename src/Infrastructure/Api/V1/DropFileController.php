@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DropFileController
 {
-    private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/';
-
     public function __construct(
         private FileRepositoryInterface $repository,
         private EntityManagerInterface $entityManager
@@ -28,7 +26,7 @@ class DropFileController
     {
         try {
             $dropFileRequest = $this->buildDropFileRequest($request);
-            $factory = new DropFileProviderFactory(self::BASE_URI);
+            $factory = new DropFileProviderFactory($_ENV["NEXTCLOUD_SERVER"]);
             $service = new DropFile($factory, $this->repository);
             $service->execute($dropFileRequest);
             $this->entityManager->flush();

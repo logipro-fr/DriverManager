@@ -11,11 +11,12 @@ use DriveManager\Domain\Model\File\Path;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DropFileNextcloudTest extends TestCase
 {
-    private const UPLOAD_FILE_PATH = 'files/romain.malosse@logipro.com/Test/';
-    private const BASE_URI = 'https://nuage.logipro.com/owncloud/remote.php/dav/';
+    private const UPLOAD_FILE_PATH = 'way/to/upload/files/on/nexcloud';
+    private const BASE_URI = 'https://url/to/tests';
     private DropFileNextcloud $nextcloudClient;
     /**
      * @var array<int, array{method: string, url: string, options: array<string, mixed>}>
@@ -132,5 +133,14 @@ class DropFileNextcloudTest extends TestCase
         $fileContent = $this->nextcloudClient->readFile($file);
 
         $this->assertEquals('Hello', $fileContent);
+    }
+
+    public function testConstructorWithClientNotNull(): void
+    {
+        $mockClient = $this->createMock(HttpClientInterface::class);
+        $_ENV["NEXTCLOUD_CREDENTIALS"] = "test@example.com password";
+        $dropFileNextcloud = new DropFileNextcloud(self::BASE_URI, $mockClient);
+
+        $this->assertInstanceOf(DropFileNextcloud::class, $dropFileNextcloud);
     }
 }
