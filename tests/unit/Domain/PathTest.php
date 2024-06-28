@@ -23,10 +23,16 @@ class PathTest extends TestCase
 
     public function testDetectIncompleteNextCloudPathException(): void
     {
-        $path = 'com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test';
+        $path = 'com/owncloud/remote.php/dav/files/moi@test.com/';
         $this->expectException(IncompletePathException::class);
         $this->expectExceptionMessage("Provider drive detect but seem incomplete. Please check path '$path'");
 
         new Path("$path");
+    }
+
+    public function testValidePath(): void
+    {
+        $path = new Path("http://owncloud/nextcloud");
+        $this->assertEquals("http://owncloud/nextcloud", $path->getPath());
     }
 }
