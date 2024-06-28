@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd"
+  backupGlobals="false"
+  colors="true"
+  bootstrap="tests/bootstrap.php"
+  cacheDirectory="var/.phpunit.cache">
+  <coverage/>
+  <testsuites>
+    <testsuite name="all">
+      <directory suffix="Test.php">tests/unit</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="APP_ENV" value="test" force="true"/>
+    <env name="KERNEL_CLASS" value="DriveManager\Infrastructure\Shared\Symfony\Kernel"/>
+    <env name="DATABASE_URL" value="sqlite:///var/sqlite-unit-test.db"/>
+    <env name="APP_DEBUG" value="0"/>
+    <env name="SYMFONY_DOTENV_PATH" value="DriveManager\tests\unit\.env.test"/>
+    <env name="NEXTCLOUD_CREDENTIALS" value="mailAddress password"/>
+    <env name="NEXTCLOUD_SERVER" value='https://UrlToDropAFileOnNextcloud'/>
+  </php>
+  <source>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">src/public</directory>
+    </exclude>
+  </source>
+</phpunit>

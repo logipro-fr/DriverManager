@@ -1,0 +1,6 @@
+/var/
+/vendor/
+/GoogleDriveFileForFuture/
+AFaire.txt
+/src/Infrastructure/Shared/Symfony/.env.local
+/tests/.env.test

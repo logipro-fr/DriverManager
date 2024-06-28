@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Create the var directory if it does not exist
+function create_var_directory() {
+    DIR_VAR=var
+    if [ ! -d "$DIR_VAR" ]; then
+        mkdir $DIR_VAR
+    fi
+}
+
+function build_docker_images() {
+    (
+        cd docker 
+        docker compose build
+    )
+}
+
+
+create_var_directory
+build_docker_images
+bin/composer install

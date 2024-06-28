@@ -1,0 +1,24 @@
+#!/bin/sh
+
+cmd=`docker container ls | grep drivemanager-php`
+status=$?
+if [ $status = 0 ]
+then
+docker exec \
+    -ti \
+    -e APP_ENV=test \
+    drivemanager-php php $@
+else
+## execution de PHP de manière autonome (pas besoin d'un environnement de containers)
+docker run \
+    --init \
+    --rm \
+    -ti \
+    --name php-drivemanager-running-script \
+    -v "$(pwd)/bin/docker/php/php.ini:/usr/local/etc/php/php.ini" \
+    -v "$PWD":"$PWD" \
+    --user 1000:1000 \
+    -w "$PWD" \
+    drivemanager-php php $@
+fi
+

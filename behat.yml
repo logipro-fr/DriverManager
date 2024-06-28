@@ -1,0 +1,23 @@
+# behat.yml
+default:
+  autoload:
+    '': '%paths.base%/tests'
+  formatters:
+    progress: true
+    pretty: true
+  suites:
+    default:
+      paths:
+        - '%paths.base%/features/'
+      contexts:
+        - Features\DropAFileContext
+        - Features\GetAFileContext
+#  extensions:
+#    DVDoug\Behat\CodeCoverage\Extension:
+#      filter:
+#        include:
+#          directories:
+#            'src': ~
+#      reports:
+#        text:
+#          showColors: true
