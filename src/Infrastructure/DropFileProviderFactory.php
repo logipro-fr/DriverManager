@@ -26,7 +26,7 @@ class DropFileProviderFactory extends ProviderAbstractFactory
             case 'FileSystem':
                 return new DropFileForFileSystem();
             default:
-                throw new BadApiNameException("A wrong api name is enter in paramater of function create");
+                throw new BadApiNameException("A wrong api name is enter on parameter driver of function create");
         }
     }
 

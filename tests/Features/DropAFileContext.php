@@ -56,7 +56,6 @@ class DropAFileContext implements Context
      */
     public function iDepositAFileInTheDirectory(string $fileToDeposit, string $directoryName): void
     {
-        $currentDate = new \DateTimeImmutable();
         $request = new DropFileRequest(
             "unIdDeTest",
             "$fileToDeposit",

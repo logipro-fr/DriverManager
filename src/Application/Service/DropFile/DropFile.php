@@ -28,14 +28,11 @@ class DropFile
         $fileName = new FileName($request->fileToDeposit);
         $fileContent = new FileContent($request->fileContent);
         $file = new File($fileName, $path, $fileContent);
+        $dropFileApi = $this->dropFileProviderFactory->create($request->apiName);
 
         if ($request->apiName == "FileSystem") {
             /** @var DropFileForFileSystem $dropFileApi */
-            $dropFileApi = $this->dropFileProviderFactory->create($request->apiName);
             $dropFileApi->createDirectory("$request->filePathToDirectory/$request->fileToDeposit");
-        } else {
-            /** @var DropFileNextcloud $dropFileApi */
-            $dropFileApi = $this->dropFileProviderFactory->create($request->apiName);
         }
 
         $this->repository->add($file);

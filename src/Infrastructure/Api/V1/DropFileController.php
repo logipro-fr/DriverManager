@@ -15,6 +15,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DropFileController
 {
+    // Constantes pour les codes de statut HTTP
+    private const HTTP_CREATED = 201;
+    private const HTTP_BAD_REQUEST = 400;
+
     public function __construct(
         private FileRepositoryInterface $repository,
         private EntityManagerInterface $entityManager
@@ -30,29 +34,18 @@ class DropFileController
             $service = new DropFile($factory, $this->repository);
             $service->execute($dropFileRequest);
             $this->entityManager->flush();
+
+            $response = $service->getResponse();
+            return $this->createJsonResponse(true, '', ['fileId' => $response->createdFileId], '', self::HTTP_CREATED);
         } catch (Exception $e) {
-            $className = (new \ReflectionClass($e))->getShortName();
-            return new JsonResponse(
-                [
-                    'success' => false,
-                    'ErrorCode' => $className,
-                    'data' => '',
-                    'message' => $e->getMessage(),
-                ],
-                400
+            return $this->createJsonResponse(
+                false,
+                (new \ReflectionClass($e))->getShortName(),
+                [],
+                $e->getMessage(),
+                self::HTTP_BAD_REQUEST
             );
         }
-
-        $response = $service->getResponse();
-        return new JsonResponse(
-            [
-                'success' => true,
-                'ErrorCode' => "",
-                'data' => ['fileId' =>  $response->createdFileId],
-                'message' => "",
-            ],
-            201
-        );
     }
 
     private function buildDropFileRequest(Request $request): DropFileRequest
@@ -79,5 +72,25 @@ class DropFileController
             $fileContent,
             $driver
         );
+    }
+
+    /**
+     * @param array<string, mixed> $data
+    */
+    private function createJsonResponse(
+        bool $success,
+        string $errorCode,
+        array $data,
+        string $message,
+        int $statusCode
+    ): JsonResponse {
+        $response = [
+            'success' => $success,
+            'statusCode' => $errorCode,
+            'data' => $data,
+            'message' => $message,
+        ];
+
+        return new JsonResponse($response, $statusCode);
     }
 }

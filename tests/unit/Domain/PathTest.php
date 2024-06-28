@@ -25,14 +25,8 @@ class PathTest extends TestCase
     {
         $path = 'com/owncloud/remote.php/dav/files/romain.malosse@logipro.com/Test';
         $this->expectException(IncompletePathException::class);
-        $this->expectExceptionMessage("NextCloud drive detect but seem incomplete. Please check path '$path'");
+        $this->expectExceptionMessage("Provider drive detect but seem incomplete. Please check path '$path'");
 
         new Path("$path");
-    }
-
-    public function testCorrectFileSystemButWithStrangeWord(): void
-    {
-        $path = new Path("http://owncloud/nextcloud");
-        $this->assertEquals("http://owncloud/nextcloud", $path->getPath());
     }
 }

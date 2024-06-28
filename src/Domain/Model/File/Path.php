@@ -22,7 +22,7 @@ class Path
     private function validatePath(string $path): void
     {
         if ($this->isNextCloudPath($path) && !$this->isCompletePath($path)) {
-            throw new IncompletePathException("NextCloud drive detect but seem incomplete. Please check path '$path'");
+            throw new IncompletePathException("Provider drive detect but seem incomplete. Please check path '$path'");
         }
     }
 

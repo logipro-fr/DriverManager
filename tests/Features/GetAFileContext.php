@@ -19,6 +19,7 @@ class GetAFileContext implements Context
 {
     private DropFileResponse $response;
     private FileRepositoryInMemory $repository;
+    private DropFile $service;
     private FileId $fileId;
 
     /**
@@ -26,7 +27,6 @@ class GetAFileContext implements Context
      */
     public function theIdentityOfAFile(): void
     {
-        $currentDate = new DateTimeImmutable();
         $request = new DropFileRequest(
             "unIdDeTest",
             "hello.txt",
@@ -37,9 +37,9 @@ class GetAFileContext implements Context
         $this->repository = new FileRepositoryInMemory();
         $dropFileProviderFactory = new DropFileProviderFactory("fileSystemUri");
 
-        $service = new DropFile($dropFileProviderFactory, $this->repository);
-        $service->execute($request);
-        $this->response = $service->getResponse();
+        $this->service = new DropFile($dropFileProviderFactory, $this->repository);
+        $this->service->execute($request);
+        $this->response = $this->service->getResponse();
     }
 
     /**

@@ -84,10 +84,11 @@ class DropFileTest extends TestCase
     public function testCountFilesDeposit(): void
     {
         $apiVfs = new DropFileApiVfs();
-        $file = new File(new FileName("test"), new Path(), new FileContent("some content"));
+        $file1 = new File(new FileName("test1"), new Path(), new FileContent("content"));
+        $file2 = new File(new FileName("test2"), new Path(), new FileContent("content"));
 
-        $apiVfs->dropFile($file);
-        $apiVfs->dropFile($file);
+        $apiVfs->dropFile($file1);
+        $apiVfs->dropFile($file2);
 
         $this->assertEquals(2, $apiVfs->count);
     }

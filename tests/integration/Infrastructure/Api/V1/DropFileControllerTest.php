@@ -43,7 +43,7 @@ class DropFileControllerTest extends WebTestCase
                 "driver" => "badApiName",
             ])
         );
-        $exceptedMessage = '"message":"A wrong api name is enter in paramater of function create"';
+        $expectedMessage = '"message":"A wrong api name is enter on parameter driver of function create"';
 
         /** @var string */
         $responseContent = $this->client->getResponse()->getContent();
@@ -51,10 +51,11 @@ class DropFileControllerTest extends WebTestCase
 
         $this->assertEquals(400, $responseStatus);
         $this->assertStringContainsString('"success":false', $responseContent);
-        $this->assertStringContainsString('ErrorCode":"BadApiNameException"', $responseContent);
-        $this->assertStringContainsString('"data":""', $responseContent);
-        $this->assertStringContainsString($exceptedMessage, $responseContent);
+        $this->assertStringContainsString('"statusCode":"BadApiNameException"', $responseContent);
+        $this->assertStringContainsString('"data":[]', $responseContent); // Vérifie un tableau vide
+        $this->assertStringContainsString($expectedMessage, $responseContent);
     }
+
 
     public function testControllerRouting(): void
     {
@@ -86,9 +87,9 @@ class DropFileControllerTest extends WebTestCase
         $this->assertTrue($responseData['success']);
         $this->assertStringContainsString('"success":true', $responseContent);
 
-        $this->assertArrayHasKey('ErrorCode', $responseData);
-        $this->assertEquals('', $responseData['ErrorCode']);
-        $this->assertStringContainsString('"ErrorCode":', $responseContent);
+        $this->assertArrayHasKey('statusCode', $responseData);
+        $this->assertEquals('', $responseData['statusCode']);
+        $this->assertStringContainsString('"statusCode":', $responseContent);
 
         $this->assertArrayHasKey('data', $responseData);
         $this->assertArrayHasKey('fileId', $responseData['data']);
